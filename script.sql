@@ -6,6 +6,27 @@ USE volumetria;
 
 -- Sensores Milesight
 
+-- topic v3/espm/devices/presence01/up
+-- topic v3/espm/devices/presence02/up
+-- topic v3/espm/devices/presence03/up
+-- topic v3/espm/devices/presence04/up
+-- topic v3/espm/devices/presence05/up
+-- topic v3/espm/devices/presence06/up
+-- topic v3/espm/devices/presence07/up
+-- topic v3/espm/devices/presence08/up
+-- { "end_device_ids": { "device_id": "presence01" }, "uplink_message": { "rx_metadata": [{ "timestamp": 2040934975 }], "decoded_payload": { "battery": 99, "occupancy": "vacant" } } }
+CREATE TABLE presenca (
+  id bigint NOT NULL AUTO_INCREMENT,
+  data datetime NOT NULL,
+  id_sensor tinyint NOT NULL,
+  delta int NOT NULL,
+  bateria tinyint NOT NULL,
+  ocupado tinyint NOT NULL,
+  PRIMARY KEY (id),
+  KEY presenca_data_id_sensor (data, id_sensor),
+  KEY presenca_id_sensor (id_sensor)
+);
+
 -- topic v3/espm/devices/temperature01/up
 -- { "end_device_ids": { "device_id": "temperature01" }, "uplink_message": { "rx_metadata": [{ "timestamp": 2040934975 }], "decoded_payload": { "humidity": 82, "temperature": 23.4 } } }
 CREATE TABLE temperatura (
@@ -38,5 +59,26 @@ CREATE TABLE passagem (
 
 -- Query de consolidação por aula
 select date(data) dia, sum(entrada) total_entrada, sum(saida) total_saida from passagem where data between '2025-03-03 00:00:00' and '2025-03-14 23:59:59' and weekday(data) in (2, 3) and time(data) between '08:00:00' and '10:00:00' and id_sensor = 2 group by dia;
+
+-- Query para monitorar as presenças em tempo real / colorir o digital twin
+(select id_sensor, ocupado, time_to_sec(timediff(now(), data)) delta_agora from presenca where id_sensor = 1 order by id desc limit 1)
+union all
+(select id_sensor, ocupado, time_to_sec(timediff(now(), data)) delta_agora from presenca where id_sensor = 2 order by id desc limit 1)
+union all
+(select id_sensor, ocupado, time_to_sec(timediff(now(), data)) delta_agora from presenca where id_sensor = 3 order by id desc limit 1)
+union all
+(select id_sensor, ocupado, time_to_sec(timediff(now(), data)) delta_agora from presenca where id_sensor = 4 order by id desc limit 1)
+union all
+(select id_sensor, ocupado, time_to_sec(timediff(now(), data)) delta_agora from presenca where id_sensor = 5 order by id desc limit 1)
+union all
+(select id_sensor, ocupado, time_to_sec(timediff(now(), data)) delta_agora from presenca where id_sensor = 6 order by id desc limit 1)
+union all
+(select id_sensor, ocupado, time_to_sec(timediff(now(), data)) delta_agora from presenca where id_sensor = 7 order by id desc limit 1)
+union all
+(select id_sensor, ocupado, time_to_sec(timediff(now(), data)) delta_agora from presenca where id_sensor = 8 order by id desc limit 1)
+;
+
+-- Query para monitorar a umidade e a temperatura em tempo real
+select umidade, temperatura from temperatura order by id desc limit 1;
 
 -- https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html
