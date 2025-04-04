@@ -31,6 +31,8 @@ Para executar, deve criar o arquivo `config.py` da seguinte forma:
 ```python
 host = '0.0.0.0'
 port = 3000
+conexao_banco = 'mysql+mysqlconnector://usuario:senha@host/banco'
+url_api = 'https://site.com'
 ```
 
 Todos os comandos abaixo assumem que o terminal esteja com o diretório atual na raiz do projeto.
