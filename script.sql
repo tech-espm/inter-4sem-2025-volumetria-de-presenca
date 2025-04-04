@@ -16,7 +16,7 @@ USE volumetria;
 -- topic v3/espm/devices/presence08/up
 -- { "end_device_ids": { "device_id": "presence01" }, "uplink_message": { "rx_metadata": [{ "timestamp": 2040934975 }], "decoded_payload": { "battery": 99, "occupancy": "vacant" } } }
 CREATE TABLE presenca (
-  id bigint NOT NULL AUTO_INCREMENT,
+  id bigint NOT NULL,
   data datetime NOT NULL,
   id_sensor tinyint NOT NULL,
   delta int NOT NULL,
@@ -30,7 +30,7 @@ CREATE TABLE presenca (
 -- topic v3/espm/devices/temperature01/up
 -- { "end_device_ids": { "device_id": "temperature01" }, "uplink_message": { "rx_metadata": [{ "timestamp": 2040934975 }], "decoded_payload": { "humidity": 82, "temperature": 23.4 } } }
 CREATE TABLE temperatura (
-  id bigint NOT NULL AUTO_INCREMENT,
+  id bigint NOT NULL,
   data datetime NOT NULL,
   id_sensor tinyint NOT NULL,
   delta int NOT NULL,
@@ -45,7 +45,7 @@ CREATE TABLE temperatura (
 -- topic v3/espm/devices/passage02/up
 -- { "end_device_ids": { "device_id": "passage01" }, "uplink_message": { "rx_metadata": [{ "timestamp": 2040934975 }], "decoded_payload": { "battery": 0, "period_in": 0, "period_out": 0 } } }
 CREATE TABLE passagem (
-  id bigint NOT NULL AUTO_INCREMENT,
+  id bigint NOT NULL,
   data datetime NOT NULL,
   id_sensor tinyint NOT NULL,
   delta int NOT NULL,
