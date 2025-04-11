@@ -43,9 +43,7 @@
 
 	$("#form").validate({
 		rules: {
-			data: {
-				required: true
-			}
+			data: { required: true }
 		},
 		submitHandler: function () {
 			atualizarDados();
@@ -56,17 +54,10 @@
 		waitSwal();
 
 		try {
-
 			let response = await fetch("/obterDados");
 
 			if (response.ok) {
-
 				Swal.close();
-
-				let div = document.getElementById("div-grafico");
-				div.innerHTML = '<canvas id="grafico-barras" style="height: 50vh;"></canvas>';
-
-				let labels = [], data = [];
 
 				let dados = await response.json();
 				if (!dados || !dados.length) {
@@ -74,17 +65,27 @@
 					return;
 				}
 
-				for (let i = 0; i < dados.length; i++) {
-					labels.push(dados[i].dia);
-					data.push(dados[i].valor);
+				// Filtrar apenas os dados de temperatura
+				let dadosTemperatura = dados.filter(d => d.temperatura !== undefined);
+
+				let labels = [];
+				let data = [];
+
+				for (let i = 0; i < dadosTemperatura.length; i++) {
+					let dataHora = new Date(dadosTemperatura[i].data);
+					labels.push(dataHora.toLocaleTimeString("pt-BR", { hour: '2-digit', minute: '2-digit' }));
+					data.push(dadosTemperatura[i].temperatura);
 				}
 
-				let grafico = new Chart(document.getElementById("grafico-barras"), {
+				let div = document.getElementById("div-grafico");
+				div.innerHTML = '<canvas id="grafico-barras" style="height: 50vh;"></canvas>';
+
+				new Chart(document.getElementById("grafico-barras"), {
 					type: "bar",
 					data: {
 						labels: labels,
 						datasets: [{
-							label: "Valor",
+							label: "Temperatura (°C)",
 							backgroundColor: "#4e73df",
 							hoverBackgroundColor: "#2e59d9",
 							borderColor: "#4e73df",
@@ -94,32 +95,15 @@
 					options: {
 						maintainAspectRatio: false,
 						layout: {
-							padding: {
-								left: 10,
-								right: 25,
-								top: 25,
-								bottom: 0
-							}
+							padding: { left: 10, right: 25, top: 25, bottom: 0 }
 						},
 						scales: {
 							x: {
-								gridLines: {
-									display: false,
-									drawBorder: false
-								},
-								ticks: {
-									maxTicksLimit: 10
-								},
-								maxBarThickness: 25,
+								ticks: { maxTicksLimit: 10 },
+								maxBarThickness: 25
 							},
 							y: {
-								//display: false,
-								ticks: {
-									min: 0,
-									max: 10,
-									maxTicksLimit: 10,
-									padding: 10
-								},
+								ticks: { min: 0, maxTicksLimit: 10, padding: 10 },
 								gridLines: {
 									color: "rgb(234, 236, 244)",
 									zeroLineColor: "rgb(234, 236, 244)",
@@ -127,38 +111,32 @@
 									borderDash: [2],
 									zeroLineBorderDash: [2]
 								}
-							},
+							}
 						},
-						legend: {
-							display: false
-						},
-						tooltips: {
-							titleMarginBottom: 10,
-							titleFontColor: '#6e707e',
-							titleFontSize: 14,
-							backgroundColor: "rgb(255,255,255)",
-							bodyFontColor: "#858796",
-							borderColor: '#dddfeb',
-							borderWidth: 1,
-							xPadding: 15,
-							yPadding: 15,
-							displayColors: false,
-							caretPadding: 10
-						},
+						plugins: {
+							legend: { display: false },
+							tooltip: {
+								backgroundColor: "rgb(255,255,255)",
+								bodyColor: "#858796",
+								borderColor: '#dddfeb',
+								borderWidth: 1,
+								padding: 15,
+								displayColors: false,
+								caretPadding: 10
+							}
+						}
 					}
 				});
 
 			} else {
 				await exibirErro(response);
 			}
-
 		} catch (ex) {
 			Swal.fire("Erro", "Erro ao listar os dados: " + ex.message, "error");
 		}
 	}
 
 	atualizarDados();
-
 </script>
 
-{% endblock %}
+
