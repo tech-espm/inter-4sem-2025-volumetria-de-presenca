@@ -3,6 +3,8 @@ import config
 import requests
 from datetime import datetime
 from banco import engine
+from sqlalchemy import create_engine, text
+from sqlalchemy.orm import Session
 
 app = Flask(__name__)
 
@@ -17,63 +19,45 @@ def sobre():
 
 @app.route("/obterDados")
 def obterDados():
-    with engine.connect() as conn:
+    with Session(engine) as sessao, sessao.begin():
         # TEMPERATURA
-        result = conn.execute("SELECT max(id) FROM temperatura")
+        result = sessao.execute(text("SELECT max(id) FROM temperatura"))
         max_id_temp = result.fetchone()[0] or 0
 
         response_temp = requests.get(f"{config.url_api}?sensor=temperature&id_inferior={max_id_temp}")
         dados_temp = response_temp.json()
 
         for dado in dados_temp:
-            try:
-                conn.execute("""
-                    INSERT INTO temperatura (id, data, id_sensor, delta, umidade, temperatura)
-                    VALUES (%s, %s, %s, %s, %s, %s)
-                """, (
-                    dado['id'], dado['data'], dado['id_sensor'],
-                    dado['delta'], dado['umidade'], dado['temperatura']
-                ))
-            except Exception as e:
-                print(f"Erro ao inserir temperatura: {e}")
+            sessao.execute(text("""
+                INSERT INTO temperatura (id, data, id_sensor, delta, umidade, temperatura)
+                VALUES (:id, :data, :id_sensor, :delta, :umidade, :temperatura)
+            """), dado)
 
         # PRESENCA
-        result = conn.execute("SELECT max(id) FROM presenca")
+        result = sessao.execute(text("SELECT max(id) FROM presenca"))
         max_id_pres = result.fetchone()[0] or 0
 
         response_pres = requests.get(f"{config.url_api}?sensor=presence&id_inferior={max_id_pres}")
         dados_pres = response_pres.json()
 
         for dado in dados_pres:
-            try:
-                conn.execute("""
-                    INSERT INTO presenca (id, data, id_sensor, delta, bateria, ocupado)
-                    VALUES (%s, %s, %s, %s, %s, %s)
-                """, (
-                    dado['id'], dado['data'], dado['id_sensor'],
-                    dado['delta'], dado['bateria'], dado['ocupado']
-                ))
-            except Exception as e:
-                print(f"Erro ao inserir presenca: {e}")
+            sessao.execute(text("""
+                INSERT INTO presenca (id, data, id_sensor, delta, bateria, ocupado)
+                VALUES (:id, :data, :id_sensor, :delta, :bateria, :ocupado)
+            """), dado)
 
         # PASSAGEM
-        result = conn.execute("SELECT max(id) FROM passagem")
+        result = sessao.execute(text("SELECT max(id) FROM passagem"))
         max_id_pass = result.fetchone()[0] or 0
 
         response_pass = requests.get(f"{config.url_api}?sensor=passage&id_inferior={max_id_pass}")
         dados_pass = response_pass.json()
 
         for dado in dados_pass:
-            try:
-                conn.execute("""
-                    INSERT INTO passagem (id, data, id_sensor, delta, bateria, entrada, saida)
-                    VALUES (%s, %s, %s, %s, %s, %s, %s)
-                """, (
-                    dado['id'], dado['data'], dado['id_sensor'],
-                    dado['delta'], dado['bateria'], dado['entrada'], dado['saida']
-                ))
-            except Exception as e:
-                print(f"Erro ao inserir passagem: {e}")
+            sessao.execute(text("""
+                INSERT INTO passagem (id, data, id_sensor, delta, bateria, entrada, saida)
+                VALUES (:id, :data, :id_sensor, :delta, :bateria, :entrada, :saida)
+            """), dado)
     
     return jsonify(dados_temp + dados_pres + dados_pass)
     
