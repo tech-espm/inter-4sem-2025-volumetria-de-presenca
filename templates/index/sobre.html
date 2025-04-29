@@ -1,17 +1,181 @@
 {% extends 'layout.html' %}
 
 {% block body %}
+<style>
+	:root {
+		--primary-color: #f8f9fa;
+		/* quase branco */
+		--secondary-color: #e2e6ea;
+		/* cinza muito claro */
+		--accent-color: #ced4da;
+		/* cinza claro */
+		--text-color: #495057;
+		/* cinza escuro para texto */
+	}
 
-<div class="container-fluid">
+	body {
+		background-color: var(--primary-color);
+		color: var(--text-color);
+		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	}
 
-	<h1>
-		Sobre
-	</h1>
+	.hero {
+		background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+		color: var(--text-color);
+		padding: 60px 0;
+		text-align: center;
+		border-radius: 12px;
+		box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+	}
 
-	<p>
-		Sobre nós! 😊
-	</p>
+	.card-team {
+		background-color: white;
+		border: 1px solid var(--accent-color);
+		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+		transition: all 0.3s ease-in-out;
+		border-radius: 12px;
+		padding: 20px;
+	}
+
+	.card-team:hover {
+		transform: translateY(-5px);
+		box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+	}
+
+	.section-title {
+		margin-top: 60px;
+		margin-bottom: 20px;
+		font-weight: 600;
+		color: #6c757d;
+		text-align: center;
+	}
+
+	.bg-light-custom {
+		background-color: var(--secondary-color);
+		border-radius: 12px;
+		padding: 20px;
+	}
+
+	.team-img {
+		width: 100px;
+		height: 100px;
+		object-fit: cover;
+		border-radius: 50%;
+		margin-bottom: 10px;
+		border: 3px solid var(--accent-color);
+	}
+
+	p {
+		font-size: 1rem;
+		color: var(--text-color);
+		line-height: 1.6;
+	}
+</style>
+
+<div class="container-fluid px-4">
+
+	<!-- Hero Section -->
+	<div class="hero mb-5">
+		<img src="static/img/AbsTECH.png" alt="Logo Absolut" class="mb-3" style="width: 150px;">
+		<h1 class="display-5 fw-bold">Estudo Volumétrico de Presença</h1>
+		<p class="lead">Tecnologia de sensores para ambientes acadêmicos mais inteligentes</p>
+	</div>
+
+	<!-- Sobre o Projeto -->
+	<div class="row align-items-center mb-5 px-3 px-md-5">
+		<div class="col-md-7">
+			<h3 class="section-title text-md-start text-center mb-3">
+				Sobre o Projeto
+				<div style="width: 60px; height: 4px; background-color: #ced4da; margin-top: 6px; border-radius: 2px;">
+				</div>
+			</h3>
+			<p class="lead text-md-start text-center mb-3">
+				Criamos uma solução baseada em sensores para monitorar a presença em ambientes educacionais,
+				permitindo decisões mais inteligentes sobre ocupação, conforto e aproveitamento de espaço.
+			</p>
+			<p class="text-md-start text-center">
+				O estudo volumétrico de presença se concentra em capturar dados tridimensionais sobre a ocupação e
+				movimentação
+				de pessoas dentro de um ambiente. Utilizamos sensores avançados para mapear volumes físicos e detectar
+				variações de densidade em tempo real.
+			</p>
+		</div>
+		<div class="col-md-5 text-center">
+			<img src="static/img/Techno.png" alt="Sensor Icon" style="max-width: 350px;" class="img-fluid">
+		</div>
+	</div>
+
+
+	<!-- Quem Somos -->
+	<section class="mb-5">
+		<div class="bg-light-custom px-4 py-4 rounded shadow-sm text-center">
+			<h3 class="section-title mb-3">Quem Somos</h3>
+			<p class="mb-0 mx-auto" style="max-width: 700px;">
+				Equipe de estudantes da <strong>ESPM</strong>, em parceria com a <strong>Absolut Technologies</strong>, criando soluções tecnológicas para ambientes educacionais mais inteligentes.
+			</p>
+		</div>
+	</section>
+
+	<!-- Nossa Equipe -->
+	<h3 class="section-title">Nossa Equipe</h3>
+	<div class="row justify-content-center mb-5">
+
+		<div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
+			<div class="card card-team text-center">
+				<img src="static/img/perfil/fernando.jpg" alt="Fernando Sabella" class="team-img mx-auto">
+				<p class="fw-semibold mt-2">Fernando Sabella</p>
+				<div class="row">
+					<a href=""><img class="icone" src="static/img/icons/linkedin.svg" alt=""></a>
+					<a href=""><img class="icone" src="static/img/icons/github.svg" alt=""></a>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
+			<div class="card card-team text-center">
+				<img src="static/img/perfil/gabriel.jpeg" alt="Gabriel Prestes" class="team-img mx-auto">
+				<p class="fw-semibold mt-2">Gabriel Prestes</p>
+				<div class="row">
+					<a href=""><img class="icone" src="static/img/icons/linkedin.svg" alt=""></a>
+					<a href=""><img class="icone" src="static/img/icons/github.svg" alt=""></a>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
+			<div class="card card-team text-center">
+				<img src="static/img/perfil/henrique.jpeg" alt="Henrique Lecce" class="team-img mx-auto">
+				<p class="fw-semibold mt-2">Henrique Lecce</p>
+				<div class="row">
+					<a href=""><img class="icone" src="static/img/icons/linkedin.svg" alt=""></a>
+					<a href=""><img class="icone" src="static/img/icons/github.svg" alt=""></a>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
+			<div class="card card-team text-center">
+				<img src="static/img/perfil/isabelle.jpeg" alt="Isabelle Dib" class="team-img mx-auto">
+				<p class="fw-semibold mt-2">Isabelle Dib</p>
+				<div class="row">
+					<a href=""><img class="icone" src="static/img/icons/linkedin.svg" alt=""></a>
+					<a href=""><img class="icone" src="static/img/icons/github.svg" alt=""></a>
+				</div>
+			</div>
+		</div>
+
+		<div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
+			<div class="card card-team text-center">
+				<img src="static/img/perfil/joao.jpeg" alt="João Pedro Helbel" class="team-img mx-auto">
+				<p class="fw-semibold mt-2">João Helbel</p>
+				<div class="row pl-2">
+					<a href=""><img class="icone" src="static/img/icons/linkedin.svg" alt=""></a>
+					<a href=""><img class="icone" src="static/img/icons/github.svg" alt=""></a>
+				</div>
+			</div>
+		</div>
+
+	</div>
 
 </div>
-
 {% endblock %}
