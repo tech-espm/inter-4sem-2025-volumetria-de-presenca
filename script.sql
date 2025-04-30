@@ -81,4 +81,29 @@ union all
 -- Query para monitorar a umidade e a temperatura em tempo real
 select umidade, temperatura from temperatura order by id desc limit 1;
 
+-- Query para consolidar as entradas e saídas por dia por período de aula
+select tmp1.dia, tmp1.total_entrada total_entrada1, tmp1.total_saida total_saida1, tmp2.total_entrada total_entrada2, tmp2.total_saida total_saida2, tmp3.total_entrada total_entrada3, tmp3.total_saida total_saida3
+from (
+	select date(data) dia, sum(entrada) total_entrada, sum(saida) total_saida
+	from passagem
+	where data between '2025-03-03 00:00:00' and '2025-03-14 23:59:59'
+	and time(data) between '07:00:00' and '09:00:00'
+	and id_sensor = 2 group by dia
+) tmp1
+inner join (
+	select date(data) dia, sum(entrada) total_entrada, sum(saida) total_saida
+	from passagem
+	where data between '2025-03-03 00:00:00' and '2025-03-14 23:59:59'
+	and time(data) between '09:00:01' and '11:00:00'
+	and id_sensor = 2 group by dia
+) tmp2 on tmp2.dia = tmp1.dia
+inner join (
+	select date(data) dia, sum(entrada) total_entrada, sum(saida) total_saida
+	from passagem
+	where data between '2025-03-03 00:00:00' and '2025-03-14 23:59:59'
+	and time(data) between '11:00:01' and '13:00:00'
+	and id_sensor = 2 group by dia
+) tmp3 on tmp3.dia = tmp1.dia
+;
+
 -- https://dev.mysql.com/doc/refman/8.4/en/date-and-time-functions.html
