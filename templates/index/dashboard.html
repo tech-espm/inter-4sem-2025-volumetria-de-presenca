@@ -1,0 +1,148 @@
+{% extends 'layout.html' %}
+
+{% block body %}
+<style>
+    canvas {
+        background-color: white !important;
+        border-radius: 12px;
+    }
+
+    .form-select {
+        border-radius: 8px;
+        padding: 4px 12px;
+        display: inline-block;
+        width: auto;
+    }
+
+    .card {
+        border-radius: 12px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    }
+
+    .card-title {
+        font-weight: 600;
+    }
+</style>
+
+<div class="container py-5">
+    <h2 class="text-center mb-4 text-primary">Dashboard📊</h2>
+    <p class="text-center mb-4">Visualize os dados de temperatura e umidade do seu ambiente.</p>
+    <!-- Gráfico -->
+    <div class="card p-4">
+        <div class="card-body">
+            <select id="seletor" class="form-select ms-2">
+                <option value="temperatura">Temperatura (°C)</option>
+                <option value="umidade">Umidade (%)</option>
+            </select>
+            <canvas id="graficoSensor" height="120"></canvas>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    let chartSensor;
+
+    const cores = {
+        temperatura: {
+            cor: 'rgba(255, 99, 132, 1)',
+            fundo: 'rgba(255, 99, 132, 0.2)',
+            label: 'Temperatura (°C)',
+            eixoY: '°C'
+        },
+        umidade: {
+            cor: 'rgba(54, 162, 235, 1)',
+            fundo: 'rgba(54, 162, 235, 0.2)',
+            label: 'Umidade (%)',
+            eixoY: '%'
+        }
+    };
+
+    function criarGrafico(tipo) {
+        fetch('/dados/temperatura')
+            .then(res => res.json())
+            .then(dados => {
+                if (!dados || dados.length === 0) {
+                    alert("⚠️ Sem dados disponíveis para exibição!");
+                    if (chartSensor) chartSensor.destroy();
+                    return;
+                }
+
+                const filtrado = dados.filter((_, index) => index % 6 === 0);
+                const labels = dados.map(d => d.data).reverse();
+                const valores = dados.map(d => d[tipo]).reverse();
+
+                const { cor, fundo, label, eixoY } = cores[tipo];
+
+                if (chartSensor) {
+                    chartSensor.destroy();
+                }
+
+                const ctx = document.getElementById('graficoSensor').getContext('2d');
+                chartSensor = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: label,
+                            data: valores,
+                            borderColor: cor,
+                            backgroundColor: fundo,
+                            fill: true,
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            tension: 0.4
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                labels: {
+                                    boxWidth: 12,
+                                    font: { weight: 'bold' }
+                                }
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false
+                            }
+                        },
+                        scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Data e Hora'
+                                },
+                                ticks: {
+                                    maxRotation: 45,
+                                    minRotation: 45
+                                }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: eixoY
+                                },
+                                beginAtZero: true
+                            }
+                        }
+                    }
+                });
+            })
+            .catch(error => {
+                console.error("Erro ao carregar dados:", error);
+                alert("Erro ao carregar dados do gráfico.");
+            });
+    }
+
+    // Inicializa com temperatura
+    criarGrafico("temperatura");
+
+    // Alterna entre temperatura e umidade
+    document.getElementById("seletor").addEventListener("change", function () {
+        criarGrafico(this.value);
+    });
+</script>
+{% endblock %}

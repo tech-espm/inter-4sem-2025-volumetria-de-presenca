@@ -17,6 +17,32 @@ def index():
 def sobre():
     return render_template('index/sobre.html', titulo='Sobre Nós')
 
+@app.get("/dashboard")
+def dashboard():
+    return render_template('index/dashboard.html', titulo='Dashboard')
+
+
+@app.get('/dados/temperatura')
+def dados_temp():
+    with Session(engine) as sessao, sessao.begin():
+        result = sessao.execute(text("""
+            SELECT data, temperatura, umidade
+            FROM temperatura
+            WHERE (HOUR(data) * 60 + MINUTE(data)) % 90 = 0
+            ORDER BY data DESC
+            LIMIT 100
+        """))
+        dados = result.fetchall()
+        dados = [
+            {
+                "data": row["data"].strftime("%d/%m %H:%M"),
+                "temperatura": row["temperatura"],
+                "umidade": row["umidade"]
+            } for row in dados
+        ]
+    return jsonify(dados)
+
+
 @app.route("/obterDados")
 def obterDados():
     with Session(engine) as sessao, sessao.begin():
