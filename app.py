@@ -1,8 +1,8 @@
 from flask import Flask, jsonify, render_template, json, request, Response
 import config
 import requests
-from datetime import datetime
-from banco import engine
+from datetime import datetime, timedelta
+from banco import engine, listarConsolidado
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Session
 
@@ -10,8 +10,9 @@ app = Flask(__name__)
 
 @app.get('/')
 def index():
+    semana_passada = (datetime.today() + timedelta(days=-6)).strftime('%Y-%m-%d')
     hoje = datetime.today().strftime('%Y-%m-%d')
-    return render_template('index/index.html', hoje=hoje)
+    return render_template('index/index.html', semana_passada=semana_passada, hoje=hoje)
 
 @app.get('/sobre')
 def sobre():
@@ -45,6 +46,9 @@ def dados_temp():
 
 @app.route("/obterDados")
 def obterDados():
+    data_inicial = request.args['data_inicial']
+    data_final = request.args['data_final']
+
     with Session(engine) as sessao, sessao.begin():
         # TEMPERATURA
         result = sessao.execute(text("SELECT max(id) FROM temperatura"))
@@ -85,7 +89,9 @@ def obterDados():
                 VALUES (:id, :data, :id_sensor, :delta, :bateria, :entrada, :saida)
             """), dado)
     
-    return jsonify(dados_temp + dados_pres + dados_pass)
+    return jsonify({
+        "consolidado": listarConsolidado(data_inicial, data_final)
+	})
     
 @app.post('/criar')
 def criar():

@@ -79,5 +79,55 @@ def criarPessoa(nome, email):
 		# lista = [ ... ]
 		# sessao.execute(text("INSERT INTO pessoa (nome, email) VALUES (:nome, :email)"), lista)
 
+def listarConsolidado(data_inicial, data_final):
+	with Session(engine) as sessao:
+		parametros = {
+			'data_inicial': data_inicial + ' 00:00:00',
+			'data_final': data_final + ' 23:59:59'
+		}
+
+		# Mais informações sobre o método execute e sobre o resultado que ele retorna:
+		# https://docs.sqlalchemy.org/en/14/orm/session_api.html#sqlalchemy.orm.Session.execute
+		# https://docs.sqlalchemy.org/en/14/core/connections.html#sqlalchemy.engine.Result
+		registros = sessao.execute(text("""
+		select date_format(tmp1.dia, '%d/%m/%Y') dia, cast(tmp1.total_entrada as signed) total_entrada1, cast(tmp1.total_saida as signed) total_saida1, cast(tmp2.total_entrada as signed) total_entrada2, cast(tmp2.total_saida as signed) total_saida2, cast(tmp3.total_entrada as signed) total_entrada3, cast(tmp3.total_saida as signed) total_saida3
+		from (
+			select date(data) dia, sum(entrada) total_entrada, sum(saida) total_saida
+			from passagem
+			where data between :data_inicial and :data_final
+			and time(data) between '07:30:00' and '09:10:00'
+			and id_sensor = 2 group by dia
+		) tmp1
+		inner join (
+			select date(data) dia, sum(entrada) total_entrada, sum(saida) total_saida
+			from passagem
+			where data between :data_inicial and :data_final
+			and time(data) between '09:30:00' and '11:10:00'
+			and id_sensor = 2 group by dia
+		) tmp2 on tmp2.dia = tmp1.dia
+		inner join (
+			select date(data) dia, sum(entrada) total_entrada, sum(saida) total_saida
+			from passagem
+			where data between :data_inicial and :data_final
+			and time(data) between '11:20:00' and '13:00:00'
+			and id_sensor = 2 group by dia
+		) tmp3 on tmp3.dia = tmp1.dia
+		"""), parametros)
+
+		lista = []
+
+		for (dia, total_entrada1, total_saida1, total_entrada2, total_saida2, total_entrada3, total_saida3) in registros:
+			lista.append({
+				"dia": dia,
+				"total_entrada1": total_entrada1,
+				"total_saida1": total_saida1,
+				"total_entrada2": total_entrada2,
+				"total_saida2": total_saida2,
+				"total_entrada3": total_entrada3,
+				"total_saida3": total_saida3,
+			})
+
+		return lista
+
 # Para mais informações:
 # https://docs.sqlalchemy.org/en/14/tutorial/dbapi_transactions.html

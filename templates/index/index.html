@@ -56,18 +56,26 @@
 	<div id="canvasZone"><canvas id="renderCanvas"></canvas></div>
 
 	<div class="row">
-		<div class="col-sm-4">
+		<div class="col-sm-6 col-xl-4">
 
 			<div class="card shadow my-4">
 				<div class="card-body">
-					<form id="form">
-						<div class="form-group">
-							<label for="data">Data</label>
-							<input id="data" name="data" class="form-control" type="date" value="{{ hoje}}" />
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label for="data_inicial">Data Inicial</label>
+								<input id="data_inicial" name="data_inicial" class="form-control" type="date" value="{{semana_passada}}" />
+							</div>
 						</div>
+						<div class="col-sm-6">
+							<div class="form-group">
+								<label for="data_final">Data Final</label>
+								<input id="data_final" name="data_final" class="form-control" type="date" value="{{hoje}}" />
+							</div>
+						</div>
+					</div>
 
-						<button type="submit" class="btn btn-primary">Listar</button>
-					</form>
+					<button type="submit" class="btn btn-primary">Listar</button>
 				</div>
 			</div>
 
@@ -76,25 +84,6 @@
 
 	<div class="card shadow my-4">
 		<div class="card-body" id="div-grafico"></div>
-	</div>
-
-	<div class="row">
-		<div class="col-sm-4">
-
-			<div class="card shadow my-4">
-				<div class="card-body">
-					<form id="form">
-						<div class="form-group">
-							<label for="data">Data</label>
-							<input id="data" name="data" class="form-control" type="date" value="{{ hoje}}" />
-						</div>
-
-						<button type="submit" class="btn btn-primary">Listar</button>
-					</form>
-				</div>
-			</div>
-
-		</div>
 	</div>
 
 	<div class="card shadow my-4">
@@ -124,17 +113,20 @@
 		waitSwal();
 
 		try {
-			let response = await fetch("/obterDados");
+			let data_inicial = document.getElementById("data_inicial").value;
+			let data_final = document.getElementById("data_final").value;
+			let response = await fetch(`/obterDados?data_inicial=${data_inicial}&data_final=${data_final}`);
 
 			if (response.ok) {
 				Swal.close();
 
-				let dados = await response.json();
-				if (!dados || !dados.length) {
+				let obj = await response.json();
+				if (!obj || !obj.consolidado || !obj.consolidado.length) {
 					Swal.fire("Erro", "Sem dados na data especificada!", "error");
 					return;
 				}
 
+				/*
 				// Filtrar apenas os dados de temperatura
 				let dadosTemperatura = dados.filter(d => d.temperatura !== undefined);
 
@@ -197,11 +189,12 @@
 						}
 					}
 				});
+				*/
 
 				//HEATMAP
-				periodos = ["Entrada 07:30–09:10", "Saída 07:30–09:10", "Entrada 09:30–11:10", "Saída 09:30–11:10", "Entrada 11:20–13:00", "Saída 11:20–13:00"];
+				const periodos = ["Entrada 07:30–09:10", "Saída 07:30–09:10", "Entrada 09:30–11:10", "Saída 09:30–11:10", "Entrada 11:20–13:00", "Saída 11:20–13:00"];
 				
-				let html = [`<table class="table table-bordered table-sm w-50 mx-auto" style="height: auto; line-height: 1.2;"><thead><tr><th>DATA</th>`];
+				let html = [`<table class="table table-bordered table-sm w-50 mx-auto" style="height: auto; line-height: 1.2;"><thead><tr><th>Data</th>`];
 				for (let i = 0; i < periodos.length; i++) {
 					html.push(`<th>${periodos[i]}</th>`);
 				}
@@ -212,20 +205,62 @@
 					<tbody>
 				`);
 
-				for (let dias = 0; dias <= 7; dias++) {
-					html.push(`<tr><td>${dia}:00</td>`);
-						for (let d = 0; d < dias.length; d++) {
-						let ruido = 0;
-						for (let i = 0; i < dados.length; i++) {
-							if (dados[i].dia === dias[d] && dados[i].hora === h) {
-								ruido = dados[i].ruido_normalizado;
-								break;
-							}
-						}
-						html.push(`<td style="background-color:rgba(113, 74, 152, ${ruido / 100});">${ruido.toFixed(1)}</td>`);
-					}
+				const consolidado = obj.consolidado;
+				let menor = consolidado[0].total_entrada1;
+				let maior = consolidado[0].total_entrada1;
+
+				for (let i = 0; i < consolidado.length; i++) {
+					const dado = consolidado[i];
+					if (menor > dado.total_entrada1)
+						menor = dado.total_entrada1;
+					if (maior < dado.total_entrada1)
+						maior = dado.total_entrada1;
+					if (menor > dado.total_saida1)
+						menor = dado.total_saida1;
+					if (maior < dado.total_saida1)
+						maior = dado.total_saida1;
+					if (menor > dado.total_entrada2)
+						menor = dado.total_entrada2;
+					if (maior < dado.total_entrada2)
+						maior = dado.total_entrada2;
+					if (menor > dado.total_saida2)
+						menor = dado.total_saida2;
+					if (maior < dado.total_saida2)
+						maior = dado.total_saida2;
+					if (menor > dado.total_entrada3)
+						menor = dado.total_entrada3;
+					if (maior < dado.total_entrada3)
+						maior = dado.total_entrada3;
+					if (menor > dado.total_saida3)
+						menor = dado.total_saida3;
+					if (maior < dado.total_saida3)
+						maior = dado.total_saida3;
+				}
+
+				let delta = (maior - menor) || 1;
+
+				for (let i = 0; i < consolidado.length; i++) {
+					const dado = consolidado[i];
+					html.push(`<tr><td>${dado.dia}</td>`);
+
+					let n = (dado.total_entrada1 - menor) / delta;
+					html.push(`<td style="background-color:rgba(113, 74, 152, ${n});">${dado.total_entrada1}</td>`);
+					n = (dado.total_saida1 - menor) / delta;
+					html.push(`<td style="background-color:rgba(113, 74, 152, ${n});">${dado.total_saida1}</td>`);
+
+					n = (dado.total_entrada2 - menor) / delta;
+					html.push(`<td style="background-color:rgba(113, 74, 152, ${n});">${dado.total_entrada2}</td>`);
+					n = (dado.total_saida2 - menor) / delta;
+					html.push(`<td style="background-color:rgba(113, 74, 152, ${n});">${dado.total_saida2}</td>`);
+
+					n = (dado.total_entrada3 - menor) / delta;
+					html.push(`<td style="background-color:rgba(113, 74, 152, ${n});">${dado.total_entrada3}</td>`);
+					n = (dado.total_saida3 - menor) / delta;
+					html.push(`<td style="background-color:rgba(113, 74, 152, ${n});">${dado.total_saida3}</td>`);
+
 					html.push(`</tr>`);
 				}
+
 				html.push(`</tbody></table>`);
 				document.getElementById("div-heatmap").innerHTML = html.join('');
 
