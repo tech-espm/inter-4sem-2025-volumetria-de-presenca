@@ -78,6 +78,29 @@
 		<div class="card-body" id="div-grafico"></div>
 	</div>
 
+	<div class="row">
+		<div class="col-sm-4">
+
+			<div class="card shadow my-4">
+				<div class="card-body">
+					<form id="form">
+						<div class="form-group">
+							<label for="data">Data</label>
+							<input id="data" name="data" class="form-control" type="date" value="{{ hoje}}" />
+						</div>
+
+						<button type="submit" class="btn btn-primary">Listar</button>
+					</form>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="card shadow my-4">
+		<div class="card-body" id="div-heatmap"></div>
+	</div>
+
 </div>
 
 <script src="/static/js/jquery-validate/jquery.validate.min.js"></script>
@@ -174,6 +197,37 @@
 						}
 					}
 				});
+
+				//HEATMAP
+				periodos = ["Entrada 07:30–09:10", "Saída 07:30–09:10", "Entrada 09:30–11:10", "Saída 09:30–11:10", "Entrada 11:20–13:00", "Saída 11:20–13:00"];
+				
+				let html = [`<table class="table table-bordered table-sm w-50 mx-auto" style="height: auto; line-height: 1.2;"><thead><tr><th>DATA</th>`];
+				for (let i = 0; i < periodos.length; i++) {
+					html.push(`<th>${periodos[i]}</th>`);
+				}
+
+				html.push(`
+					</tr>
+					</thead>
+					<tbody>
+				`);
+
+				for (let dias = 0; dias <= 7; dias++) {
+					html.push(`<tr><td>${dia}:00</td>`);
+						for (let d = 0; d < dias.length; d++) {
+						let ruido = 0;
+						for (let i = 0; i < dados.length; i++) {
+							if (dados[i].dia === dias[d] && dados[i].hora === h) {
+								ruido = dados[i].ruido_normalizado;
+								break;
+							}
+						}
+						html.push(`<td style="background-color:rgba(113, 74, 152, ${ruido / 100});">${ruido.toFixed(1)}</td>`);
+					}
+					html.push(`</tr>`);
+				}
+				html.push(`</tbody></table>`);
+				document.getElementById("div-heatmap").innerHTML = html.join('');
 
 			} else {
 				await exibirErro(response);

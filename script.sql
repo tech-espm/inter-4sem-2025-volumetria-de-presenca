@@ -87,21 +87,21 @@ from (
 	select date(data) dia, sum(entrada) total_entrada, sum(saida) total_saida
 	from passagem
 	where data between '2025-03-03 00:00:00' and '2025-03-14 23:59:59'
-	and time(data) between '07:00:00' and '09:00:00'
+	and time(data) between '07:30:00' and '09:10:00'
 	and id_sensor = 2 group by dia
 ) tmp1
 inner join (
 	select date(data) dia, sum(entrada) total_entrada, sum(saida) total_saida
 	from passagem
 	where data between '2025-03-03 00:00:00' and '2025-03-14 23:59:59'
-	and time(data) between '09:00:01' and '11:00:00'
+	and time(data) between '09:30:00' and '11:10:00'
 	and id_sensor = 2 group by dia
 ) tmp2 on tmp2.dia = tmp1.dia
 inner join (
 	select date(data) dia, sum(entrada) total_entrada, sum(saida) total_saida
 	from passagem
 	where data between '2025-03-03 00:00:00' and '2025-03-14 23:59:59'
-	and time(data) between '11:00:01' and '13:00:00'
+	and time(data) between '11:20:00' and '13:00:00'
 	and id_sensor = 2 group by dia
 ) tmp3 on tmp3.dia = tmp1.dia
 ;
