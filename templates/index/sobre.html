@@ -1,8 +1,10 @@
+
 {% extends 'layout.html' %}
 
 {% block body %}
 
 <style>
+
 	:root {
 		--primary-color: rgb(0, 8, 48);
 		--secondary-color:rgb(0, 11, 65);
@@ -76,26 +78,45 @@
 	}
 
 	.nomes {
-		font-size: 0.8rem;
+		font-size: 1rem;
 		color: var(--text-color);
+	}
+
+	.icones {
+		color: var(--text-color);
+		font-size: 1.5rem;
+		align-items: center;
+		justify-content: center;
+		display: flex;
+		width: 40px;
+		height: 40px;
+		margin: 0 auto;
+	}
+
+	.icones:hover {
+		color: var(--secondary-color);
 	}
 
 </style>
 
 <div class="container-fluid px-4 pg-about">
 
+
 	<!-- Hero Section -->
+
 	<div class="hero mb-5">
 		<img src="static/img/AbsTECH.png" alt="Logo Absolut" class="mb-3" style="width: 150px;">
 		<h1 class="display-5 fw-bold">Estudo Volumétrico de Presença</h1>
 		<p class="lead">Tecnologia de sensores para ambientes acadêmicos mais inteligentes</p>
 	</div>
 
+
 	<!-- Sobre o Projeto -->
+
 	<div class="row align-items-center mb-5 px-3 px-md-5">
 		<div class="col-md-7">
 			<h3 class="section-title text-md-start text-center mb-3">
-				Sobre o Projeto
+				SOBRE O PROJETO
 				<div style="width: 60px; height: 4px; background-color:rgb(254, 255, 239); margin-top: 6px; border-radius: 2px;">
 				</div>
 			</h3>
@@ -117,8 +138,9 @@
 
 
 	<!-- Quem Somos -->
-	<section class="mb-5">
-		<div class="bg-light-custom px-4 py-4 rounded shadow-sm text-center">
+
+	<section class="mb-5 d-flex justify-content-center">
+		<div class="bg-light-custom px-4 py-4 rounded-4 shadow-sm text-center" style="max-width: 800px; width: 100%; border-radius: 32px; margin-bottom: 10px;">
 			<h3 class="section-title mb-3">Quem Somos</h3>
 			<p class="mb-0 mx-auto" style="max-width: 700px;">
 				Equipe de estudantes da <strong>ESPM</strong>, em parceria com a <strong>Absolut Technologies</strong>, criando soluções tecnológicas para ambientes educacionais mais inteligentes.
@@ -126,20 +148,26 @@
 		</div>
 	</section>
 
+
 	<!-- Nossa Equipe -->
 
-	<div class="container-fluid px-4" style="background-image: url('static/img/background_equipe.gif'); background-size: 100%; background-position: center; border-radius: 12px; padding: 20px;">
-		
-		<h3 class="section-title">Nossa Equipe</h3>
+	<!--<div class="container-fluid px-4" style="background-image: url('static/img/background_equipe.gif'); background-size: 100%; background-position: center; border-radius: 12px; padding: 20px;">-->
+	<div style="background-image: url('static/img/background_equipe.gif'); background-size: cover; background-position: center; width: 100vw; margin-left: calc(-50vw + 50%); padding: 40px 0px; margin-bottom 0;">
+
+		<h3 class="section-title">NOSSA EQUIPE</h3>
 		<div class="row justify-content-center mb-5">
 
 			<div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
 				<div class="card card-team text-center">
 					<img src="static/img/perfil/fernando.jpg" alt="Fernando Sabella" class="team-img mx-auto">
 					<p class="nomes fw-semibold mt-2">Fernando Sabella</p>
-					<div class="row align-items-center justify-content-center">
-						<a href=""><img class="icone" src="static/img/icons/linkedin.svg" alt=""></a>
-						<a href=""><img class="icone" src="static/img/icons/github.svg" alt=""></a>
+					<div class="row align-items-center justify-content-center gap-3 fs-4">
+						<a href="https://www.linkedin.com/in/fernando-sabella-00742b30b/" target="_blank" class="text-dark me-3">
+							<i class='bx bxl-linkedin-square icones'></i>
+						</a>
+						<a href="https://github.com/caicara29" target="_blank" class="text-dark">
+							<i class='bx bxl-github icones'></i>
+						</a>
 					</div>
 				</div>
 			</div>
@@ -148,9 +176,13 @@
 				<div class="card card-team text-center">
 					<img src="static/img/perfil/gabriel.jpeg" alt="Gabriel Prestes" class="team-img mx-auto">
 					<p class=" nomes fw-semibold mt-2">Gabriel Prestes</p>
-					<div class="row align-items-center justify-content-center">
-						<a href=""><img class="icone" src="static/img/icons/linkedin.svg" alt=""></a>
-						<a href=""><img class="icone" src="static/img/icons/github.svg" alt=""></a>
+					<div class="row align-items-center justify-content-center gap-3 fs-4">
+						<a href="https://www.linkedin.com/in/gabriel-prestes-moraes-cardoso-53b473250/" target="_blank" class="text-dark me-3">
+							<i class='bx bxl-linkedin-square icones'></i>
+						</a>
+						<a href="https://github.com/gabrielpmcardoso" target="_blank" class="text-dark">
+							<i class='bx bxl-github icones'></i>
+						</a>
 					</div>
 				</div>
 			</div>
@@ -159,9 +191,13 @@
 				<div class="card card-team text-center">
 					<img src="static/img/perfil/henrique.jpeg" alt="Henrique Lecce" class="team-img mx-auto">
 					<p class="nomes fw-semibold mt-2">Henrique Lecce</p>
-					<div class="row align-items-center justify-content-center">
-						<a href=""><img class="icone" src="static/img/icons/linkedin.svg" alt=""></a>
-						<a href=""><img class="icone" src="static/img/icons/github.svg" alt=""></a>
+					<div class="row align-items-center justify-content-center gap-3 fs-4">
+						<a href="https://www.linkedin.com/in/henriquelecce/" target="_blank" class="text-dark me-3">
+							<i class='bx bxl-linkedin-square icones'></i>
+						</a>
+						<a href="https://github.com/hqlcc" target="_blank" class="text-dark">
+							<i class='bx bxl-github icones'></i>
+						</a>
 					</div>
 				</div>
 			</div>
@@ -170,9 +206,13 @@
 				<div class="card card-team text-center">
 					<img src="static/img/perfil/isabelle.jpeg" alt="Isabelle Dib" class="team-img mx-auto">
 					<p class="nomes fw-semibold mt-2">Isabelle Dib</p>
-					<div class="row align-items-center justify-content-center">
-						<a href=""><img class="icone" src="static/img/icons/linkedin.svg" alt=""></a>
-						<a href=""><img class="icone" src="static/img/icons/github.svg" alt=""></a>
+					<div class="row align-items-center justify-content-center gap-3 fs-4">
+						<a href="https://www.linkedin.com/in/isabelle-dib/" target="_blank" class="text-dark me-3">
+							<i class='bx bxl-linkedin-square icones'></i>
+						</a>
+						<a href="https://github.com/isa-dib" target="_blank" class="text-dark">
+							<i class='bx bxl-github icones'></i>
+						</a>
 					</div>
 				</div>
 			</div>
@@ -181,15 +221,21 @@
 				<div class="card card-team text-center">
 					<img src="static/img/perfil/joao.jpeg" alt="João Pedro Helbel" class="team-img mx-auto">
 					<p class="nomes fw-semibold mt-2">João Helbel</p>
-					<div class="row align-items-center justify-content-center">
-						<a href=""><img class="icone" src="static/img/icons/linkedin.svg" alt=""></a>
-						<a href=""><img class="icone" src="static/img/icons/github.svg" alt=""></a>
+					<div class="row align-items-center justify-content-center gap-3 fs-4">
+						<a href="https://www.linkedin.com/in/joaohelbel/" target="_blank" class="text-dark me-3">
+							<i class='bx bxl-linkedin-square icones'></i>
+						</a>
+						<a href="https://github.com/joaohelbel" target="_blank" class="text-dark">
+							<i class='bx bxl-github icones'></i>
+						</a>
 					</div>
 				</div>
 			</div>
 
 		</div>
+
 	</div>
 
 </div>
+
 {% endblock %}
