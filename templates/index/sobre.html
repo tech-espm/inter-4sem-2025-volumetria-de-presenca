@@ -1,22 +1,25 @@
 {% extends 'layout.html' %}
 
 {% block body %}
+
 <style>
 	:root {
-		--primary-color: #f8f9fa;
-		/* quase branco */
-		--secondary-color: #e2e6ea;
-		/* cinza muito claro */
+		--primary-color: rgb(0, 8, 48);
+		--secondary-color:rgb(0, 11, 65);
 		--accent-color: #ced4da;
-		/* cinza claro */
-		--text-color: #495057;
-		/* cinza escuro para texto */
+		--text-color:rgb(254, 255, 239);
 	}
 
 	body {
 		background-color: var(--primary-color);
 		color: var(--text-color);
 		font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+	}
+
+	.pg-about {
+		background-color: var(--primary-color);
+		color: var(--text-color);
+		padding: 20px;
 	}
 
 	.hero {
@@ -29,8 +32,8 @@
 	}
 
 	.card-team {
-		background-color: white;
-		border: 1px solid var(--accent-color);
+		background-color: rgba(255, 255, 255, 0.3);
+		backdrop-filter: blur(30px);
 		box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
 		transition: all 0.3s ease-in-out;
 		border-radius: 12px;
@@ -40,6 +43,15 @@
 	.card-team:hover {
 		transform: translateY(-5px);
 		box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+	}
+
+	.team-img {
+		width: 100px;
+		height: 100px;
+		object-fit: cover;
+		border-radius: 50%;
+		margin-bottom: 10px;
+		border: 3px solid rgb(255, 98, 0);
 	}
 
 	.section-title {
@@ -56,15 +68,6 @@
 		padding: 20px;
 	}
 
-	.team-img {
-		width: 100px;
-		height: 100px;
-		object-fit: cover;
-		border-radius: 50%;
-		margin-bottom: 10px;
-		border: 3px solid var(--accent-color);
-	}
-
 	p {
 		font-size: 1rem;
 		color: var(--text-color);
@@ -72,7 +75,7 @@
 	}
 </style>
 
-<div class="container-fluid px-4">
+<div class="container-fluid px-4 pg-about">
 
 	<!-- Hero Section -->
 	<div class="hero mb-5">
@@ -117,64 +120,68 @@
 	</section>
 
 	<!-- Nossa Equipe -->
-	<h3 class="section-title">Nossa Equipe</h3>
-	<div class="row justify-content-center mb-5">
 
-		<div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
-			<div class="card card-team text-center">
-				<img src="static/img/perfil/fernando.jpg" alt="Fernando Sabella" class="team-img mx-auto">
-				<p class="fw-semibold mt-2">Fernando Sabella</p>
-				<div class="row">
-					<a href=""><img class="icone" src="static/img/icons/linkedin.svg" alt=""></a>
-					<a href=""><img class="icone" src="static/img/icons/github.svg" alt=""></a>
+	<div class="container-fluid px-4" style="background-image: url('static/img/background_equipe.gif'); background-size: 100%; background-position: center; border-radius: 12px; padding: 20px;">
+		
+		<h3 class="section-title">Nossa Equipe 2</h3>
+		<div class="row justify-content-center mb-5">
+
+			<div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
+				<div class="card card-team text-center">
+					<img src="static/img/perfil/fernando.jpg" alt="Fernando Sabella" class="team-img mx-auto">
+					<p class="fw-semibold mt-2">Fernando Sabella</p>
+					<div class="row align-items-center justify-content-center">
+						<a href=""><img class="icone" src="static/img/icons/linkedin.svg" alt=""></a>
+						<a href=""><img class="icone" src="static/img/icons/github.svg" alt=""></a>
+					</div>
 				</div>
 			</div>
-		</div>
 
-		<div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
-			<div class="card card-team text-center">
-				<img src="static/img/perfil/gabriel.jpeg" alt="Gabriel Prestes" class="team-img mx-auto">
-				<p class="fw-semibold mt-2">Gabriel Prestes</p>
-				<div class="row">
-					<a href=""><img class="icone" src="static/img/icons/linkedin.svg" alt=""></a>
-					<a href=""><img class="icone" src="static/img/icons/github.svg" alt=""></a>
+			<div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
+				<div class="card card-team text-center">
+					<img src="static/img/perfil/gabriel.jpeg" alt="Gabriel Prestes" class="team-img mx-auto">
+					<p class="fw-semibold mt-2">Gabriel Prestes</p>
+					<div class="row align-items-center justify-content-center">
+						<a href=""><img class="icone" src="static/img/icons/linkedin.svg" alt=""></a>
+						<a href=""><img class="icone" src="static/img/icons/github.svg" alt=""></a>
+					</div>
 				</div>
 			</div>
-		</div>
 
-		<div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
-			<div class="card card-team text-center">
-				<img src="static/img/perfil/henrique.jpeg" alt="Henrique Lecce" class="team-img mx-auto">
-				<p class="fw-semibold mt-2">Henrique Lecce</p>
-				<div class="row">
-					<a href=""><img class="icone" src="static/img/icons/linkedin.svg" alt=""></a>
-					<a href=""><img class="icone" src="static/img/icons/github.svg" alt=""></a>
+			<div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
+				<div class="card card-team text-center">
+					<img src="static/img/perfil/henrique.jpeg" alt="Henrique Lecce" class="team-img mx-auto">
+					<p class="fw-semibold mt-2">Henrique Lecce</p>
+					<div class="row align-items-center justify-content-center">
+						<a href=""><img class="icone" src="static/img/icons/linkedin.svg" alt=""></a>
+						<a href=""><img class="icone" src="static/img/icons/github.svg" alt=""></a>
+					</div>
 				</div>
 			</div>
-		</div>
 
-		<div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
-			<div class="card card-team text-center">
-				<img src="static/img/perfil/isabelle.jpeg" alt="Isabelle Dib" class="team-img mx-auto">
-				<p class="fw-semibold mt-2">Isabelle Dib</p>
-				<div class="row">
-					<a href=""><img class="icone" src="static/img/icons/linkedin.svg" alt=""></a>
-					<a href=""><img class="icone" src="static/img/icons/github.svg" alt=""></a>
+			<div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
+				<div class="card card-team text-center">
+					<img src="static/img/perfil/isabelle.jpeg" alt="Isabelle Dib" class="team-img mx-auto">
+					<p class="fw-semibold mt-2">Isabelle Dib</p>
+					<div class="row align-items-center justify-content-center">
+						<a href=""><img class="icone" src="static/img/icons/linkedin.svg" alt=""></a>
+						<a href=""><img class="icone" src="static/img/icons/github.svg" alt=""></a>
+					</div>
 				</div>
 			</div>
-		</div>
 
-		<div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
-			<div class="card card-team text-center">
-				<img src="static/img/perfil/joao.jpeg" alt="João Pedro Helbel" class="team-img mx-auto">
-				<p class="fw-semibold mt-2">João Helbel</p>
-				<div class="row pl-2">
-					<a href=""><img class="icone" src="static/img/icons/linkedin.svg" alt=""></a>
-					<a href=""><img class="icone" src="static/img/icons/github.svg" alt=""></a>
+			<div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
+				<div class="card card-team text-center">
+					<img src="static/img/perfil/joao.jpeg" alt="João Pedro Helbel" class="team-img mx-auto">
+					<p class="fw-semibold mt-2">João Helbel</p>
+					<div class="row align-items-center justify-content-center">
+						<a href=""><img class="icone" src="static/img/icons/linkedin.svg" alt=""></a>
+						<a href=""><img class="icone" src="static/img/icons/github.svg" alt=""></a>
+					</div>
 				</div>
 			</div>
-		</div>
 
+		</div>
 	</div>
 
 </div>
