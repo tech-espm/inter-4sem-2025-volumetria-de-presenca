@@ -6,6 +6,8 @@
 	:root {
 		--primary-color: rgb(0, 8, 48);
 		--secondary-color:rgb(0, 11, 65);
+		--tertiary-color: rgb(209, 226, 249);
+		--quaternary-color: rgb(53, 124, 255);
 		--accent-color: #ced4da;
 		--text-color:rgb(254, 255, 239);
 	}
@@ -23,7 +25,7 @@
 	}
 
 	.hero {
-		background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+		background: linear-gradient(135deg, var(--tertiary-color), var(--quaternary-color));
 		color: var(--text-color);
 		padding: 60px 0;
 		text-align: center;
@@ -51,14 +53,13 @@
 		object-fit: cover;
 		border-radius: 50%;
 		margin-bottom: 10px;
-		border: 3px solid rgb(255, 98, 0);
+		border: 3px solid rgb(255, 234, 221);
 	}
 
 	.section-title {
-		margin-top: 60px;
-		margin-bottom: 20px;
+		margin: 20px 0;
 		font-weight: 600;
-		color: #6c757d;
+		color:rgb(254, 255, 239);
 		text-align: center;
 	}
 
@@ -73,6 +74,12 @@
 		color: var(--text-color);
 		line-height: 1.6;
 	}
+
+	.nomes {
+		font-size: 0.8rem;
+		color: var(--text-color);
+	}
+
 </style>
 
 <div class="container-fluid px-4 pg-about">
@@ -89,7 +96,7 @@
 		<div class="col-md-7">
 			<h3 class="section-title text-md-start text-center mb-3">
 				Sobre o Projeto
-				<div style="width: 60px; height: 4px; background-color: #ced4da; margin-top: 6px; border-radius: 2px;">
+				<div style="width: 60px; height: 4px; background-color:rgb(254, 255, 239); margin-top: 6px; border-radius: 2px;">
 				</div>
 			</h3>
 			<p class="lead text-md-start text-center mb-3">
@@ -123,13 +130,13 @@
 
 	<div class="container-fluid px-4" style="background-image: url('static/img/background_equipe.gif'); background-size: 100%; background-position: center; border-radius: 12px; padding: 20px;">
 		
-		<h3 class="section-title">Nossa Equipe 2</h3>
+		<h3 class="section-title">Nossa Equipe</h3>
 		<div class="row justify-content-center mb-5">
 
 			<div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
 				<div class="card card-team text-center">
 					<img src="static/img/perfil/fernando.jpg" alt="Fernando Sabella" class="team-img mx-auto">
-					<p class="fw-semibold mt-2">Fernando Sabella</p>
+					<p class="nomes fw-semibold mt-2">Fernando Sabella</p>
 					<div class="row align-items-center justify-content-center">
 						<a href=""><img class="icone" src="static/img/icons/linkedin.svg" alt=""></a>
 						<a href=""><img class="icone" src="static/img/icons/github.svg" alt=""></a>
@@ -140,7 +147,7 @@
 			<div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
 				<div class="card card-team text-center">
 					<img src="static/img/perfil/gabriel.jpeg" alt="Gabriel Prestes" class="team-img mx-auto">
-					<p class="fw-semibold mt-2">Gabriel Prestes</p>
+					<p class=" nomes fw-semibold mt-2">Gabriel Prestes</p>
 					<div class="row align-items-center justify-content-center">
 						<a href=""><img class="icone" src="static/img/icons/linkedin.svg" alt=""></a>
 						<a href=""><img class="icone" src="static/img/icons/github.svg" alt=""></a>
@@ -151,7 +158,7 @@
 			<div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
 				<div class="card card-team text-center">
 					<img src="static/img/perfil/henrique.jpeg" alt="Henrique Lecce" class="team-img mx-auto">
-					<p class="fw-semibold mt-2">Henrique Lecce</p>
+					<p class="nomes fw-semibold mt-2">Henrique Lecce</p>
 					<div class="row align-items-center justify-content-center">
 						<a href=""><img class="icone" src="static/img/icons/linkedin.svg" alt=""></a>
 						<a href=""><img class="icone" src="static/img/icons/github.svg" alt=""></a>
@@ -162,7 +169,7 @@
 			<div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
 				<div class="card card-team text-center">
 					<img src="static/img/perfil/isabelle.jpeg" alt="Isabelle Dib" class="team-img mx-auto">
-					<p class="fw-semibold mt-2">Isabelle Dib</p>
+					<p class="nomes fw-semibold mt-2">Isabelle Dib</p>
 					<div class="row align-items-center justify-content-center">
 						<a href=""><img class="icone" src="static/img/icons/linkedin.svg" alt=""></a>
 						<a href=""><img class="icone" src="static/img/icons/github.svg" alt=""></a>
@@ -173,7 +180,7 @@
 			<div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
 				<div class="card card-team text-center">
 					<img src="static/img/perfil/joao.jpeg" alt="João Pedro Helbel" class="team-img mx-auto">
-					<p class="fw-semibold mt-2">João Helbel</p>
+					<p class="nomes fw-semibold mt-2">João Helbel</p>
 					<div class="row align-items-center justify-content-center">
 						<a href=""><img class="icone" src="static/img/icons/linkedin.svg" alt=""></a>
 						<a href=""><img class="icone" src="static/img/icons/github.svg" alt=""></a>
