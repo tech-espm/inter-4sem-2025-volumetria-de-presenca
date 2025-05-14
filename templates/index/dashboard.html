@@ -1,7 +1,12 @@
+
 {% extends 'layout.html' %}
 
 {% block body %}
+
 <style>
+
+
+
     canvas {
         background-color: white !important;
         border-radius: 12px;
@@ -22,12 +27,17 @@
     .card-title {
         font-weight: 600;
     }
+
 </style>
 
 <div class="container py-5">
+
     <h2 class="text-center mb-4 text-primary">Dashboard📊</h2>
     <p class="text-center mb-4">Visualize os dados de temperatura e umidade do seu ambiente.</p>
+
+
     <!-- Gráfico -->
+
     <div class="card p-4">
         <div class="card-body">
             <select id="seletor" class="form-select ms-2">
@@ -37,10 +47,12 @@
             <canvas id="graficoSensor" height="120"></canvas>
         </div>
     </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
+
     let chartSensor;
 
     const cores = {
@@ -144,5 +156,7 @@
     document.getElementById("seletor").addEventListener("change", function () {
         criarGrafico(this.value);
     });
+
 </script>
+
 {% endblock %}

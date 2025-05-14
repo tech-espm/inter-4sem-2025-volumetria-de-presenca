@@ -1,8 +1,10 @@
+
 {% extends 'layout.html' %}
 
 {% block head %}
 
 <!-- Babylon.js -->
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
 <script src="https://assets.babylonjs.com/generated/Assets.js"></script>
 <script src="https://cdn.babylonjs.com/recast.js"></script>
@@ -22,6 +24,7 @@
 <script src="https://cdn.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
 
 <style type="text/css">
+
 	#canvasZone {
 		position: relative;
 		margin: 0;
@@ -41,6 +44,7 @@
 		user-select: none;
 		touch-action: none;
 	}
+
 </style>
 
 {% endblock %}
@@ -98,6 +102,7 @@
 <script type="text/javascript" src="/static/js/chart.js/chart.min.js"></script>
 
 <script type="text/javascript">
+
 	"use strict";
 
 	function relativeLuminance(rgb) {
@@ -396,6 +401,7 @@
 	}
 
 	init();
+	
 </script>
 
 {% endblock %}
