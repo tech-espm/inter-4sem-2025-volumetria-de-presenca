@@ -22,7 +22,6 @@ def sobre():
 def dashboard():
     return render_template('index/dashboard.html', titulo='Dashboard')
 
-
 @app.get('/dados/temperatura')
 def dados_temp():
     data_inicial = request.args.get('data_inicial')

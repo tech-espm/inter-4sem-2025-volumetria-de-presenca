@@ -3,7 +3,6 @@
 {% block body %}
 
 <style>
-
     canvas {
         background-color: white !important;
         border-radius: 12px;
@@ -27,35 +26,25 @@
 </style>
 
 <div class="container py-5">
-
-    <h2 class="text-center mb-4 text-primary">Dashboard📊</h2>
-    <p class="text-center mb-4">Visualize os dados de temperatura e umidade do seu ambiente.</p>
-    <div class="card p-4 mb-4">
-        <div class="row g-3 align-items-end">
-            <div class="col-md-4">
-                <label for="dataInicial" class="form-label text-dark">Data Inicial</label>
-                <input type="date" id="dataInicial" class="form-control" value="{{ hoje }}">
-            </div>
-            <div class="col-md-4">
-                <label for="dataFinal" class="form-label text-dark">Data Final</label>
-                <input type="date" id="dataFinal" class="form-control" value="{{ hoje }}">
-            </div>
-            <div class="col-md-4">
-                <button id="btnFiltrar" class="btn btn-primary">Listar</button>
-            </div>
-        </div>
-    </div>
-
-
-
-    <!-- Gráfico -->
-
-    <div class="card p-4">
+    <div class="card">
         <div class="card-body">
-            <select id="seletor" class="form-select ms-2">
-                <option value="temperatura">Temperatura (°C)</option>
-                <option value="umidade">Umidade (%)</option>
-            </select>
+            <div class="row">
+                <div class="col-md-3">
+                    <select id="seletor" class="form-select ms-2">
+                        <option value="temperatura">Temperatura (°C)</option>
+                        <option value="umidade">Umidade (%)</option>
+                    </select>
+                </div>
+                <div class="col-md-3">
+                    <input type="date" id="dataInicial" class="form-control" value="{{ hoje }}">
+                </div>
+                <div class="col-md-3">
+                    <input type="date" id="dataFinal" class="form-control" value="{{ hoje }}">
+                </div>
+                <div class="col-md-3">
+                    <button id="btnFiltrar" class="btn btn-primary">Listar</button>
+                </div>
+            </div>
             <canvas id="graficoSensor" height="120"></canvas>
         </div>
     </div>
@@ -64,23 +53,26 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-
     let chartSensor;
 
-    const cores = {
+    const configCores = {
         temperatura: {
             cor: 'rgba(255, 99, 132, 1)',
-            fundo: 'rgba(255, 99, 132, 0.2)',
+            fundo: 'rgba(255, 99, 132, 0.3)',
             label: 'Temperatura (°C)',
             eixoY: '°C'
         },
         umidade: {
             cor: 'rgba(54, 162, 235, 1)',
-            fundo: 'rgba(54, 162, 235, 0.2)',
+            fundo: 'rgba(54, 162, 235, 0.3)',
             label: 'Umidade (%)',
             eixoY: '%'
         }
     };
+
+    function formatarData(date) {
+        return date.toISOString().split('T')[0];
+    }
 
     function criarGrafico(tipo) {
         const dataInicial = document.getElementById('dataInicial').value;
@@ -90,29 +82,21 @@
             .then(res => res.json())
             .then(dados => {
                 if (!dados.length) {
-                    alert("⚠️ Sem dados disponíveis para exibição!");
+                    Swal.fire({
+                        icon: 'warning',
+                        title: 'Sem dados disponíveis!',
+                        text: 'Não há dados para exibição no momento.',
+                        confirmButtonColor: '#3085d6'
+                    });
                     if (chartSensor) chartSensor.destroy();
                     return;
                 }
 
-                const labels = dados.map(d => d.data);
-                const valores = dados.map(d => d[tipo]);
+                const filtrado = dados.filter((_, index) => index % 6 === 0);
+                const labels = filtrado.map(d => d.data);
+                const valores = filtrado.map(d => d[tipo]);
 
-                const configCores = {
-                    temperatura: {
-                        cor: 'rgba(255, 99, 132, 1)',
-                        fundo: 'rgba(255, 99, 132, 0.3)',
-                        label: 'Temperatura (°C)'
-                    },
-                    umidade: {
-                        cor: 'rgba(54, 162, 235, 1)',
-                        fundo: 'rgba(54, 162, 235, 0.3)',
-                        label: 'Umidade (%)'
-                    }
-                };
-
-                const { cor, fundo, label } = configCores[tipo];
-
+                const { cor, fundo, label, eixoY } = configCores[tipo];
 
                 if (chartSensor) chartSensor.destroy();
 
@@ -126,20 +110,52 @@
                             data: valores,
                             borderColor: cor,
                             backgroundColor: fundo,
-                            tension: 0.4,
-                            fill: true
+                            fill: true,
+                            pointRadius: 3,
+                            pointHoverRadius: 6,
+                            tension: 0.4
                         }]
-
                     },
                     options: {
                         responsive: true,
+                        plugins: {
+                            legend: {
+                                display: true,
+                                labels: {
+                                    boxWidth: 12,
+                                    font: { weight: 'bold' }
+                                }
+                            },
+                            tooltip: {
+                                mode: 'index',
+                                intersect: false
+                            }
+                        },
                         scales: {
+                            x: {
+                                title: {
+                                    display: true,
+                                    text: 'Data e Hora'
+                                },
+                                ticks: {
+                                    maxRotation: 45,
+                                    minRotation: 45
+                                }
+                            },
                             y: {
+                                title: {
+                                    display: true,
+                                    text: eixoY
+                                },
                                 beginAtZero: true
                             }
                         }
                     }
                 });
+            })
+            .catch(error => {
+                console.error("Erro ao carregar dados:", error);
+                alert("Erro ao carregar dados do gráfico.");
             });
     }
 
@@ -148,98 +164,23 @@
         criarGrafico(tipo);
     });
 
-
-    fetch('/dados/temperatura')
-        .then(res => res.json())
-        .then(dados => {
-            if (!dados || dados.length === 0) {
-                Swal.fire({
-                    icon: 'warning',
-                    title: 'Sem dados disponíveis!',
-                    text: 'Não há dados para exibição no momento.',
-                    confirmButtonColor: '#3085d6'
-                });
-                if (chartSensor) chartSensor.destroy();
-                return;
-            }
-
-            const filtrado = dados.filter((_, index) => index % 6 === 0);
-            const labels = dados.map(d => d.data).reverse();
-            const valores = dados.map(d => d[tipo]).reverse();
-
-            const { cor, fundo, label, eixoY } = cores[tipo];
-
-            if (chartSensor) {
-                chartSensor.destroy();
-            }
-
-            const ctx = document.getElementById('graficoSensor').getContext('2d');
-            chartSensor = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: label,
-                        data: valores,
-                        borderColor: cor,
-                        backgroundColor: fundo,
-                        fill: true,
-                        pointRadius: 3,
-                        pointHoverRadius: 6,
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    plugins: {
-                        legend: {
-                            display: true,
-                            labels: {
-                                boxWidth: 12,
-                                font: { weight: 'bold' }
-                            }
-                        },
-                        tooltip: {
-                            mode: 'index',
-                            intersect: false
-                        }
-                    },
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Data e Hora'
-                            },
-                            ticks: {
-                                maxRotation: 45,
-                                minRotation: 45
-                            }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: eixoY
-                            },
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        })
-        .catch(error => {
-            console.error("Erro ao carregar dados:", error);
-            alert("Erro ao carregar dados do gráfico.");
-        });
-
-
-    // Inicializa com temperatura
-    criarGrafico("temperatura");
-
-    // Alterna entre temperatura e umidade
     document.getElementById("seletor").addEventListener("change", function () {
         criarGrafico(this.value);
     });
 
+    window.addEventListener("DOMContentLoaded", () => {
+        const hoje = new Date();
+        const seteDiasAtras = new Date();
+        seteDiasAtras.setDate(hoje.getDate() - 7);
+
+        document.getElementById("dataInicial").value = formatarData(seteDiasAtras);
+        document.getElementById("dataFinal").value = formatarData(hoje);
+
+        criarGrafico("temperatura");
+    });
+
+
 </script>
+
 
 {% endblock %}
