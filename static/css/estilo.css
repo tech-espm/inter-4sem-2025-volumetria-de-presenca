@@ -1,3 +1,12 @@
+:root {
+	--primary-color: rgb(0, 8, 48);
+	--secondary-color:rgb(0, 11, 65);
+	--tertiary-color: rgb(209, 226, 249);
+	--quaternary-color: rgb(53, 124, 255);
+	--accent-color: #ced4da;
+	--text-color:rgb(254, 255, 239);
+}
+
 img {
 	max-width: 100%;
 }
@@ -5,6 +14,12 @@ img {
 html, body {
 	/* Para fazer o rodapé ficar sempre na parte inferior da página ;) */
 	min-height: 100vh;
+}
+
+body {
+	background-color: var(--primary-color);
+	color: var(--text-color);
+	font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
 }
 
 .limitador {
@@ -32,4 +47,95 @@ html, body {
 .link-rodape, .link-rodape:hover {
 	color: white;
 	text-decoration: none;
+}
+
+a {
+	color: var(--text-color);
+}
+
+a:hover {
+	color: var(--text-color);
+}
+
+a:active {
+	color: var(--text-color);
+}
+
+.pg-about {
+	background-color: var(--primary-color);
+	color: var(--text-color);
+	padding: 20px;
+}
+
+.hero {
+	background: linear-gradient(135deg, var(--tertiary-color), var(--quaternary-color));
+	color: var(--text-color);
+	padding: 60px 0;
+	text-align: center;
+	border-radius: 12px;
+	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.card-team {
+	background-color: rgba(255, 255, 255, 0.3);
+	backdrop-filter: blur(30px);
+	box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+	transition: all 0.3s ease-in-out;
+	border-radius: 12px;
+	padding: 20px;
+}
+
+.card-team:hover {
+	transform: translateY(-5px);
+	box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+}
+
+.team-img {
+	width: 100px;
+	height: 100px;
+	object-fit: cover;
+	border-radius: 50%;
+	margin-bottom: 10px;
+	border: 3px solid rgb(255, 234, 221);
+}
+
+.section-title {
+	margin: 20px 0;
+	font-weight: 600;
+	color:rgb(254, 255, 239);
+	text-align: center;
+	font-size: 2rem;
+}
+
+.bg-light-custom {
+	background-color: var(--secondary-color);
+	border-radius: 12px;
+	padding: 20px;
+}
+
+p {
+	font-size: 1rem;
+	color: var(--text-color);
+	line-height: 1.6;
+}
+
+.nomes {
+	font-size: 1rem;
+	color: var(--text-color);
+}
+
+.icones {
+	color: var(--text-color);
+	font-size: 1.5rem;
+	align-items: center;
+	justify-content: center;
+	display: flex;
+	width: 40px;
+	height: 40px;
+	margin: 0 auto;
+	transition: color 0.1s ease-in-out;
+}
+
+.icones:hover {
+	color: var(--secondary-color);
 }
