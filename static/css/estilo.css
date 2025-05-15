@@ -1,8 +1,9 @@
+
 :root {
 	--primary-color: rgb(0, 8, 48);
 	--secondary-color:rgb(0, 11, 65);
 	--tertiary-color: rgb(209, 226, 249);
-	--quaternary-color: rgb(53, 124, 255);
+	--quaternary-color: rgb(197, 217, 255);
 	--accent-color: #ced4da;
 	--text-color:rgb(254, 255, 239);
 }
@@ -68,12 +69,16 @@ a:active {
 }
 
 .hero {
-	background: linear-gradient(135deg, var(--tertiary-color), var(--quaternary-color));
-	color: var(--text-color);
+	background: linear-gradient(135deg, var(--tertiary-color), var(--text-color));
+	color: var(--primary-color);
 	padding: 60px 0;
 	text-align: center;
 	border-radius: 12px;
 	box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.hero p{
+	color: var(--primary-color)
 }
 
 .card-team {
