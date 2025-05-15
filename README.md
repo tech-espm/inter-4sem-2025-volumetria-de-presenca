@@ -14,6 +14,14 @@ O estudo volumétrico de presença se concentra em capturar dados tridimensionai
 
 ## Participantes
 
+- [Fernando Sabella](https://github.com/caicara29)
+
+- [Gabriel Prestes](https://github.com/gabrielpmcardoso)
+
+- [Henrique Lecce](https://github.com/hqlcc)
+
+- [Isabelle Dib](https://github.com/isa-dib)
+
 - [João Helbel](https://github.com/joaohelbel)
 
 ## Objetivos do Projeto
