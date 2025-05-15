@@ -6,6 +6,7 @@
 	--quaternary-color: rgb(0, 56, 159);
 	--accent-color: #ced4da;
 	--text-color:rgb(254, 255, 239);
+	--text-color-2: rgb(255, 244, 226);
 }
 
 img {
@@ -55,11 +56,11 @@ a {
 }
 
 a:hover {
-	color: var(--text-color);
+	color: var(--text-color-2);
 }
 
 a:active {
-	color: var(--text-color);
+	color: var(--text-color-2);
 }
 
 .pg-about {
