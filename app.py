@@ -25,23 +25,35 @@ def dashboard():
 
 @app.get('/dados/temperatura')
 def dados_temp():
+    data_inicial = request.args.get('data_inicial')
+    data_final = request.args.get('data_final')
+
+    if not data_inicial or not data_final:
+        return jsonify([])
+
     with Session(engine) as sessao, sessao.begin():
         result = sessao.execute(text("""
-            SELECT data, temperatura, umidade
+            SELECT 
+                DATE_FORMAT(data, '%Y-%m-%d %H:00:00') AS hora,
+                AVG(temperatura) AS temperatura,
+                AVG(umidade) AS umidade
             FROM temperatura
-            WHERE (HOUR(data) * 60 + MINUTE(data)) % 90 = 0
-            ORDER BY data DESC
-            LIMIT 100
-        """))
+            WHERE data BETWEEN :inicio AND :fim
+            GROUP BY hora
+            ORDER BY hora
+        """), {"inicio": data_inicial, "fim": data_final + " 23:59:59"})
+
         dados = result.fetchall()
         dados = [
             {
-                "data": row["data"].strftime("%d/%m %H:%M"),
-                "temperatura": row["temperatura"],
-                "umidade": row["umidade"]
+                "data": row["hora"],
+                "temperatura": round(row["temperatura"], 2),
+                "umidade": round(row["umidade"], 2)
             } for row in dados
         ]
+    
     return jsonify(dados)
+
 
 
 @app.route("/obterDados")
