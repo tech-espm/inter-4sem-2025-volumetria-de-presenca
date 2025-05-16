@@ -45,9 +45,9 @@ def dados_temp():
         dados = result.fetchall()
         dados = [
             {
-                "data": row["hora"],
-                "temperatura": round(row["temperatura"], 2),
-                "umidade": round(row["umidade"], 2)
+                "data": row[0],
+                "temperatura": round(row[1], 2),
+                "umidade": round(row[2], 2)
             } for row in dados
         ]
     
