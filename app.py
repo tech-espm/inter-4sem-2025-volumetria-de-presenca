@@ -33,7 +33,7 @@ def dados_temp():
     with Session(engine) as sessao, sessao.begin():
         result = sessao.execute(text("""
             SELECT 
-                DATE_FORMAT(data, '%Y-%m-%d %H:00:00') AS hora,
+                DATE_FORMAT(data, '%H:00:00') AS hora,
                 AVG(temperatura) AS temperatura,
                 AVG(umidade) AS umidade
             FROM temperatura
@@ -103,6 +103,27 @@ def obterDados():
     return jsonify({
         "consolidado": listarConsolidado(data_inicial, data_final)
 	})
+    
+@app.get('/dados/temperatura/kpi')
+def dados_temp_kpi():
+    data_inicial = request.args.get('data_inicial')
+    data_final = request.args.get('data_final')
+
+    with Session(engine) as sessao, sessao.begin():
+        result = sessao.execute(text("""
+            SELECT MIN(temperatura), MAX(temperatura), AVG(temperatura)
+            FROM temperatura
+            WHERE data BETWEEN :inicio AND :fim
+        """), {"inicio": data_inicial, "fim": data_final + " 23:59:59"})
+
+        min_temp, max_temp, avg_temp = result.fetchone()
+
+    return jsonify({
+        "min": round(min_temp, 1),
+        "max": round(max_temp, 1),
+        "avg": round(avg_temp, 1)
+    })
+
     
 @app.post('/criar')
 def criar():

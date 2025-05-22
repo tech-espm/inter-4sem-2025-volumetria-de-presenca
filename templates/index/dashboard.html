@@ -1,55 +1,121 @@
 {% extends 'layout.html' %}
 
 {% block head %}
-	<link rel="shortcut icon" href="static/img/favicon.ico" type="image/x-icon">
-{% endblock %}
-
-{% block body %}
-
+<link rel="shortcut icon" href="static/img/favicon.ico" type="image/x-icon">
 <style>
-    canvas {
-        background-color: white !important;
-        border-radius: 12px;
-    }
-
-    .form-select {
-        border-radius: 8px;
-        padding: 4px 12px;
-        display: inline-block;
-        width: auto;
+    body {
+        background-color: #0B113A;
+        color: #FFFFFF;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     .card {
+        background-color: #121A4D;
         border-radius: 12px;
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+        color: #FFFFFF;
     }
 
     .card-title {
         font-weight: 600;
+        font-size: 1.2rem;
+        color: #FFFFFF;
+    }
+
+    .kpi {
+        font-size: 1.8rem;
+        font-weight: bold;
+        color: #FFFFFF;
+    }
+
+    .form-select,
+    .form-control,
+    .btn {
+        border-radius: 8px;
+    }
+
+    .btn-primary {
+        background-color: #1877F2;
+        border-color: #1877F2;
+    }
+
+    .btn-primary:hover {
+        background-color: #1E90FF;
+    }
+
+    canvas {
+        background-color: #FFFFFF !important;
+        border-radius: 12px;
+    }
+
+    h5 {
+        color: #FFFFFF;
+    }
+
+    .swal2-popup {
+        background: #121A4D !important;
+        color: #FFFFFF !important;
     }
 </style>
+{% endblock %}
+
+{% block body %}
 
 <div class="container py-5">
-    <div class="card">
-        <div class="card-body">
-            <div class="row">
-                <div class="col-md-3">
-                    <select id="seletor" class="form-select ms-2">
+
+    <!-- KPI Cards -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <div class="card text-center p-3">
+                <h5 class="card-title">Mínima</h5>
+                <div id="kpiMin" class="kpi">-- °C</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center p-3">
+                <h5 class="card-title">Média</h5>
+                <div id="kpiAvg" class="kpi">-- °C</div>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="card text-center p-3">
+                <h5 class="card-title">Máxima</h5>
+                <div id="kpiMax" class="kpi">-- °C</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="row g-3 mb-4">
+        <div class="col-md-4">
+            <input type="date" id="dataInicial" class="form-control">
+        </div>
+        <div class="col-md-4">
+            <input type="date" id="dataFinal" class="form-control">
+        </div>
+        <div class="col-md-4">
+            <button id="btnFiltrar" class="btn btn-primary mt-2 w-100">Atualizar</button>
+        </div>
+    </div>
+
+    <!-- Gráfico + Gauge -->
+    <div class="row g-3">
+        <div class="col-md-4">
+            <div class="card text-center p-3">
+                <h5 class="card-title">Temperatura Atual</h5>
+                <canvas id="gaugeTemp" height="300"></canvas>
+            </div>
+        </div>
+        <div class="col-md-8">
+            <div class="card p-3">
+                <div class="col-md-4">
+                    <select id="seletor" class="form-select">
                         <option value="temperatura">Temperatura (°C)</option>
                         <option value="umidade">Umidade (%)</option>
                     </select>
                 </div>
-                <div class="col-md-3">
-                    <input type="date" id="dataInicial" class="form-control" value="{{ hoje }}">
-                </div>
-                <div class="col-md-3">
-                    <input type="date" id="dataFinal" class="form-control" value="{{ hoje }}">
-                </div>
-                <div class="col-md-3">
-                    <button id="btnFiltrar" class="btn btn-primary">Listar</button>
-                </div>
+                <canvas id="graficoSensor" height="300"></canvas>
             </div>
-            <canvas id="graficoSensor" height="120"></canvas>
         </div>
     </div>
 
@@ -57,48 +123,71 @@
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script>
-    let chartSensor;
+    let chartSensor, gaugeChart;
 
     const configCores = {
         temperatura: {
-            cor: 'rgba(255, 99, 132, 1)',
-            fundo: 'rgba(255, 99, 132, 0.3)',
+            cor: 'rgba(255, 127, 80, 1)',
+            fundo: 'rgba(255, 127, 80, 0.3)',
             label: 'Temperatura (°C)',
             eixoY: '°C'
         },
         umidade: {
-            cor: 'rgba(54, 162, 235, 1)',
-            fundo: 'rgba(54, 162, 235, 0.3)',
+            cor: 'rgba(30, 144, 255, 1)',
+            fundo: 'rgba(30, 144, 255, 0.3)',
             label: 'Umidade (%)',
             eixoY: '%'
         }
     };
 
+
     function formatarData(date) {
         return date.toISOString().split('T')[0];
     }
 
-    function criarGrafico(tipo) {
-        const dataInicial = document.getElementById('dataInicial').value;
-        const dataFinal = document.getElementById('dataFinal').value;
+    function atualizarKPIs(dataInicial, dataFinal) {
+        fetch(`/dados/temperatura/kpi?data_inicial=${dataInicial}&data_final=${dataFinal}`)
+            .then(res => res.json())
+            .then(kpi => {
+                document.getElementById('kpiMin').innerText = `${kpi.min} °C`;
+                document.getElementById('kpiAvg').innerText = `${kpi.avg} °C`;
+                document.getElementById('kpiMax').innerText = `${kpi.max} °C`;
+            });
+    }
 
+    function atualizarGauge(valor) {
+        const ctx = document.getElementById('gaugeTemp').getContext('2d');
+        if (gaugeChart) gaugeChart.destroy();
+        gaugeChart = new Chart(ctx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Atual', 'Restante'],
+                datasets: [{
+                    data: [valor, 50 - valor],
+                    backgroundColor: ['#FF9900', '#e9ecef'],
+                    cutout: '80%'
+                }]
+            },
+            options: {
+                rotation: -90,
+                circumference: 180,
+                plugins: { legend: { display: false } }
+            }
+        });
+    }
+
+    function criarGrafico(tipo, dataInicial, dataFinal) {
         fetch(`/dados/temperatura?data_inicial=${dataInicial}&data_final=${dataFinal}`)
             .then(res => res.json())
             .then(dados => {
                 if (!dados.length) {
-                    Swal.fire({
-                        icon: 'warning',
-                        title: 'Sem dados disponíveis!',
-                        text: 'Não há dados para exibição no momento.',
-                        confirmButtonColor: '#3085d6'
-                    });
+                    Swal.fire("Aviso", "Sem dados disponíveis!", "warning");
                     if (chartSensor) chartSensor.destroy();
                     return;
                 }
 
-                const filtrado = dados.filter((_, index) => index % 6 === 0);
-                const labels = filtrado.map(d => d.data);
-                const valores = filtrado.map(d => d[tipo]);
+                const labels = dados.map(d => d.data);
+                const valores = dados.map(d => d[tipo]);
 
                 const { cor, fundo, label, eixoY } = configCores[tipo];
 
@@ -122,69 +211,55 @@
                     },
                     options: {
                         responsive: true,
-                        plugins: {
-                            legend: {
-                                display: true,
-                                labels: {
-                                    boxWidth: 12,
-                                    font: { weight: 'bold' }
-                                }
-                            },
-                            tooltip: {
-                                mode: 'index',
-                                intersect: false
-                            }
-                        },
+                        plugins: { legend: { display: true } },
                         scales: {
-                            x: {
-                                title: {
-                                    display: true,
-                                    text: 'Data e Hora'
-                                },
-                                ticks: {
-                                    maxRotation: 45,
-                                    minRotation: 45
-                                }
-                            },
                             y: {
+                                suggestedMin: 10,
+                                suggestedMax: 40,
+                                beginAtZero: false,
                                 title: {
                                     display: true,
-                                    text: eixoY
-                                },
-                                beginAtZero: true
+                                    text: '°C'
+                                }
                             }
                         }
+
+
                     }
                 });
-            })
-            .catch(error => {
-                console.error("Erro ao carregar dados:", error);
-                alert("Erro ao carregar dados do gráfico.");
+
+                atualizarGauge(valores[valores.length - 1]);
             });
     }
 
-    document.getElementById("btnFiltrar").addEventListener("click", function () {
-        const tipo = document.getElementById("seletor").value;
-        criarGrafico(tipo);
+    document.getElementById('btnFiltrar').addEventListener('click', () => {
+        const dataInicial = document.getElementById('dataInicial').value;
+        const dataFinal = document.getElementById('dataFinal').value;
+        const tipo = document.getElementById('seletor').value;
+
+        if (!dataInicial || !dataFinal) {
+            Swal.fire("Erro", "Selecione as datas!", "error");
+            return;
+        }
+
+        criarGrafico(tipo, dataInicial, dataFinal);
+        atualizarKPIs(dataInicial, dataFinal);
     });
 
-    document.getElementById("seletor").addEventListener("change", function () {
-        criarGrafico(this.value);
-    });
-
-    window.addEventListener("DOMContentLoaded", () => {
+    window.addEventListener('DOMContentLoaded', () => {
         const hoje = new Date();
         const seteDiasAtras = new Date();
         seteDiasAtras.setDate(hoje.getDate() - 7);
 
-        document.getElementById("dataInicial").value = formatarData(seteDiasAtras);
-        document.getElementById("dataFinal").value = formatarData(hoje);
+        const dataInicial = formatarData(seteDiasAtras);
+        const dataFinal = formatarData(hoje);
 
-        criarGrafico("temperatura");
+        document.getElementById('dataInicial').value = dataInicial;
+        document.getElementById('dataFinal').value = dataFinal;
+
+        criarGrafico('temperatura', dataInicial, dataFinal);
+        atualizarKPIs(dataInicial, dataFinal);
     });
-
-
 </script>
-
 
 {% endblock %}
