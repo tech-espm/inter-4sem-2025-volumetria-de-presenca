@@ -301,7 +301,7 @@
     document.getElementById('btnFiltrar').addEventListener('click', () => {
         const dataInicial = document.getElementById('dataInicial').value;
         const dataFinal = document.getElementById('dataFinal').value;
-        const tipo = document.getElementById('seletor').value;
+        const tipo = 'temperatura';
         if (!dataInicial || !dataFinal) {
             Swal.fire("Erro", "Selecione as datas!", "error");
             return;
