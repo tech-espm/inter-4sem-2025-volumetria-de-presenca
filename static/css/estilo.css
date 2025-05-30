@@ -6,7 +6,7 @@
   --accent-color: #ced4da;
   --text-color: #ffefe6;
   --text-color-2: rgb(255, 244, 226);
-  --accent-color-2: #ff2914;
+  --accent-color-2: #F88125;
 }
 
 img {
@@ -15,7 +15,6 @@ img {
 
 html,
 body {
-  /* Para fazer o rodapé ficar sempre na parte inferior da página ;) */
   min-height: 100vh;
 }
 
