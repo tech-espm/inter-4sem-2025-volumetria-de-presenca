@@ -117,217 +117,7 @@
 
   <div id="canvasZone"><canvas id="renderCanvas"></canvas></div>
 
-  <div class="row">
-    <div class="col-sm-6 col-xl-4">
-      <form class="card shadow my-4" id="form">
-        <div class="card-body">
-          <div class="row">
-            <div class="col-sm-6">
-              <div class="form-group">
-                <label for="data_inicial">Data Inicial</label>
-                <input
-                  id="data_inicial"
-                  name="data_inicial"
-                  class="form-control"
-                  type="date"
-                  value="{{semana_passada}}"
-                />
-              </div>
-            </div>
-            <div class="col-sm-6">
-              <div class="form-group">
-                <label for="data_final">Data Final</label>
-                <input
-                  id="data_final"
-                  name="data_final"
-                  class="form-control"
-                  type="date"
-                  value="{{hoje}}"
-                />
-              </div>
-            </div>
-          </div>
-
-          <button type="submit" class="btn btn-primary">Listar</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <div class="card shadow my-4">
-    <div class="card-body" id="div-heatmap"></div>
-  </div>
 </div>
-
-<script src="/static/js/jquery-validate/jquery.validate.min.js"></script>
-<script src="/static/js/jquery-validate/additional-methods.min.js"></script>
-<script src="/static/js/jquery-validate/localization/messages_pt_BR.min.js"></script>
-<script type="text/javascript" src="/static/js/chart.js/chart.min.js"></script>
-
-<script type="text/javascript">
-  "use strict";
-
-  function relativeLuminance(rgb) {
-    if (typeof rgb === "string") rgb = parseInt(rgb.replace("#", ""), 16);
-    rgb |= 0;
-    if (rgb < 0) return 1;
-    //http://www.w3.org/TR/2007/WD-WCAG20-TECHS-20070517/Overview.html#G18
-    var RsRGB = ((rgb >>> 16) & 0xff) / 255.0,
-      GsRGB = ((rgb >>> 8) & 0xff) / 255.0,
-      BsRGB = (rgb & 0xff) / 255.0,
-      R,
-      G,
-      B;
-    if (RsRGB <= 0.03928) R = RsRGB / 12.92;
-    else R = Math.pow((RsRGB + 0.055) / 1.055, 2.4);
-    if (GsRGB <= 0.03928) G = GsRGB / 12.92;
-    else G = Math.pow((GsRGB + 0.055) / 1.055, 2.4);
-    if (BsRGB <= 0.03928) B = BsRGB / 12.92;
-    else B = Math.pow((BsRGB + 0.055) / 1.055, 2.4);
-    return 0.2126 * R + 0.7152 * G + 0.0722 * B;
-  }
-
-  function textColorForBackground(i) {
-    return relativeLuminance(i) < 0.4 ? "#ffffff" : "#000000";
-  }
-
-  function coresHeatmap(perc) {
-    const r0 = 0xff;
-    const g0 = 0xff;
-    const b0 = 0xff;
-    const r1 = 0xff;
-    const g1 = 0xcc;
-    const b1 = 0x00;
-    let r = Math.max(
-      0,
-      Math.min(255, (perc * r1 + (1 - perc) * r0) | 0)
-    ).toString(16);
-    let g = Math.max(
-      0,
-      Math.min(255, (perc * g1 + (1 - perc) * g0) | 0)
-    ).toString(16);
-    let b = Math.max(
-      0,
-      Math.min(255, (perc * b1 + (1 - perc) * b0) | 0)
-    ).toString(16);
-    if (r.length < 2) r = "0" + r;
-    if (g.length < 2) g = "0" + g;
-    if (b.length < 2) b = "0" + b;
-    const corFundo = "#" + r + g + b;
-    const corTexto = textColorForBackground(corFundo);
-    return `background-color: ${corFundo}; color: ${corTexto};`;
-  }
-
-  function gerarHeatmap(consolidado) {
-    const periodos = [
-      "Entrada 07:30–09:10",
-      "Saída 07:30–09:10",
-      "Entrada 09:30–11:10",
-      "Saída 09:30–11:10",
-      "Entrada 11:20–13:00",
-      "Saída 11:20–13:00",
-    ];
-
-    let html = [
-      `<table class="table table-bordered table-sm w-50 mx-auto" style="height: auto; line-height: 1.2;"><thead><tr><th>Data</th>`,
-    ];
-    for (let i = 0; i < periodos.length; i++) {
-      html.push(`<th>${periodos[i]}</th>`);
-    }
-
-    html.push(`
-			</tr>
-			</thead>
-			<tbody>
-		`);
-
-    let menor = consolidado[0].total_entrada1;
-    let maior = consolidado[0].total_entrada1;
-
-    for (let i = 0; i < consolidado.length; i++) {
-      const dado = consolidado[i];
-      if (menor > dado.total_entrada1) menor = dado.total_entrada1;
-      if (maior < dado.total_entrada1) maior = dado.total_entrada1;
-      if (menor > dado.total_saida1) menor = dado.total_saida1;
-      if (maior < dado.total_saida1) maior = dado.total_saida1;
-      if (menor > dado.total_entrada2) menor = dado.total_entrada2;
-      if (maior < dado.total_entrada2) maior = dado.total_entrada2;
-      if (menor > dado.total_saida2) menor = dado.total_saida2;
-      if (maior < dado.total_saida2) maior = dado.total_saida2;
-      if (menor > dado.total_entrada3) menor = dado.total_entrada3;
-      if (maior < dado.total_entrada3) maior = dado.total_entrada3;
-      if (menor > dado.total_saida3) menor = dado.total_saida3;
-      if (maior < dado.total_saida3) maior = dado.total_saida3;
-    }
-
-    let delta = maior - menor || 1;
-
-    for (let i = 0; i < consolidado.length; i++) {
-      const dado = consolidado[i];
-      html.push(`<tr><td>${dado.dia}</td>`);
-
-      let n = (dado.total_entrada1 - menor) / delta;
-      html.push(`<td style="${coresHeatmap(n)}">${dado.total_entrada1}</td>`);
-      n = (dado.total_saida1 - menor) / delta;
-      html.push(`<td style="${coresHeatmap(n)}">${dado.total_saida1}</td>`);
-
-      n = (dado.total_entrada2 - menor) / delta;
-      html.push(`<td style="${coresHeatmap(n)}">${dado.total_entrada2}</td>`);
-      n = (dado.total_saida2 - menor) / delta;
-      html.push(`<td style="${coresHeatmap(n)}">${dado.total_saida2}</td>`);
-
-      n = (dado.total_entrada3 - menor) / delta;
-      html.push(`<td style="${coresHeatmap(n)}">${dado.total_entrada3}</td>`);
-      n = (dado.total_saida3 - menor) / delta;
-      html.push(`<td style="${coresHeatmap(n)}">${dado.total_saida3}</td>`);
-
-      html.push(`</tr>`);
-    }
-
-    html.push(`</tbody></table>`);
-    document.getElementById("div-heatmap").innerHTML = html.join("");
-  }
-
-  $("#form").validate({
-    rules: {
-      data_inicial: { required: true },
-      data_final: { required: true },
-    },
-    submitHandler: function () {
-      atualizarDados();
-    },
-  });
-
-  async function atualizarDados() {
-    waitSwal();
-
-    try {
-      let data_inicial = document.getElementById("data_inicial").value;
-      let data_final = document.getElementById("data_final").value;
-      let response = await fetch(
-        `/obterDados?data_inicial=${data_inicial}&data_final=${data_final}`
-      );
-
-      if (response.ok) {
-        Swal.close();
-
-        let obj = await response.json();
-        if (!obj || !obj.consolidado || !obj.consolidado.length) {
-          Swal.fire("Erro", "Sem dados na data especificada!", "error");
-          return;
-        }
-
-        gerarHeatmap(obj.consolidado);
-      } else {
-        await exibirErro(response);
-      }
-    } catch (ex) {
-      Swal.fire("Erro", "Erro ao listar os dados: " + ex.message, "error");
-    }
-  }
-
-  atualizarDados();
-</script>
 
 <script type="text/javascript">
   "use strict";
@@ -353,6 +143,8 @@
     const currentSkybox = scene.createDefaultSkybox(hdrTexture, true);
 
     let idsAdicionados = new Set();
+
+    await BABYLON.AppendSceneAsync("/static/glb/projetoInterSala.glb", scene);
 
     await BABYLON.AppendSceneAsync("/static/glb/plantinha_3d.glb", scene);
     let nodes = scene.getNodes();
@@ -384,7 +176,11 @@
 
     scene.createDefaultCameraOrLight(true, true, true);
     const camera = scene.activeCamera;
-    camera.alpha = Math.PI / 2;
+    //camera.alpha = 3.8014; // Math.PI / 2;
+    //camera.beta = 1.2256;
+    camera.alpha = 3.6949941371093122;
+    camera.beta = 1.4214854652301074;
+    camera.radius = 100;
   }
 
   async function init() {

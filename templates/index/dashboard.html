@@ -194,6 +194,10 @@
         </div>
     </div>
 
+    <div class="card shadow my-4">
+        <div class="card-body" id="div-heatmap"></div>
+    </div>
+
 </div>
 
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -220,15 +224,40 @@
         return date.toISOString().split('T')[0];
     }
 
-    function atualizarKPIs(dataInicial, dataFinal, tipo) {
-        fetch(`/dados/${tipo}/kpi?data_inicial=${dataInicial}&data_final=${dataFinal}`)
-            .then(res => res.json())
-            .then(kpi => {
-                let unidade = tipo === 'temperatura' ? '°C' : '%';
-                document.getElementById('kpiMin').innerText = kpi.min !== undefined ? `${kpi.min} ${unidade}` : '--';
-                document.getElementById('kpiAvg').innerText = kpi.avg !== undefined ? `${kpi.avg} ${unidade}` : '--';
-                document.getElementById('kpiMax').innerText = kpi.max !== undefined ? `${kpi.max} ${unidade}` : '--';
-            });
+    async function atualizarKPIs(dataInicial, dataFinal, tipo) {
+        waitSwal();
+
+        await criarGrafico(dataInicial, dataFinal, tipo);
+
+        try {
+            let response = await fetch(`/dados/${tipo}/kpi?data_inicial=${dataInicial}&data_final=${dataFinal}`);
+            if (response.ok) {
+                let kpi = await response.json();
+                response = await fetch(`/obterDados?data_inicial=${dataInicial}&data_final=${dataFinal}`);
+                if (response.ok) {
+                    let obj = await response.json();
+                    if (!obj || !obj.consolidado || !obj.consolidado.length) {
+                        Swal.fire("Erro", "Sem dados na data especificada!", "error");
+                        return;
+                    }
+
+                    Swal.close();
+
+                    gerarHeatmap(obj.consolidado);
+
+                    let unidade = tipo === 'temperatura' ? '°C' : '%';
+                    document.getElementById('kpiMin').innerText = kpi.min !== undefined ? `${kpi.min} ${unidade}` : '--';
+                    document.getElementById('kpiAvg').innerText = kpi.avg !== undefined ? `${kpi.avg} ${unidade}` : '--';
+                    document.getElementById('kpiMax').innerText = kpi.max !== undefined ? `${kpi.max} ${unidade}` : '--';
+                } else {
+                    await exibirErro(response);
+                }
+            } else {
+                await exibirErro(response);
+            }
+        } catch (ex) {
+            Swal.fire("Erro", "Erro ao listar os dados: " + ex.message, "error");
+        }
     }
 
     function atualizarTermometro(valor, tipo) {
@@ -249,8 +278,8 @@
         valorTermometro.innerText = `${valor} ${unidade}`;
     }
 
-    function criarGrafico(tipo, dataInicial, dataFinal) {
-        fetch(`/dados/${tipo}?data_inicial=${dataInicial}&data_final=${dataFinal}`)
+    function criarGrafico(dataInicial, dataFinal, tipo) {
+        return fetch(`/dados/${tipo}?data_inicial=${dataInicial}&data_final=${dataFinal}`)
             .then(res => res.json())
             .then(dados => {
                 if (!dados.length) {
@@ -298,7 +327,129 @@
             });
     }
 
-    document.getElementById('btnFiltrar').addEventListener('click', () => {
+    function relativeLuminance(rgb) {
+        if (typeof rgb === "string") rgb = parseInt(rgb.replace("#", ""), 16);
+        rgb |= 0;
+        if (rgb < 0) return 1;
+        //http://www.w3.org/TR/2007/WD-WCAG20-TECHS-20070517/Overview.html#G18
+        let RsRGB = ((rgb >>> 16) & 0xff) / 255.0,
+            GsRGB = ((rgb >>> 8) & 0xff) / 255.0,
+            BsRGB = (rgb & 0xff) / 255.0,
+            R,
+            G,
+            B;
+        if (RsRGB <= 0.03928) R = RsRGB / 12.92;
+        else R = Math.pow((RsRGB + 0.055) / 1.055, 2.4);
+        if (GsRGB <= 0.03928) G = GsRGB / 12.92;
+        else G = Math.pow((GsRGB + 0.055) / 1.055, 2.4);
+        if (BsRGB <= 0.03928) B = BsRGB / 12.92;
+        else B = Math.pow((BsRGB + 0.055) / 1.055, 2.4);
+        return 0.2126 * R + 0.7152 * G + 0.0722 * B;
+    }
+
+    function textColorForBackground(i) {
+        return relativeLuminance(i) < 0.4 ? "#ffffff" : "#000000";
+    }
+
+    function coresHeatmap(perc) {
+        const r0 = 0xff;
+        const g0 = 0xff;
+        const b0 = 0xff;
+        const r1 = 0xff;
+        const g1 = 0xcc;
+        const b1 = 0x00;
+        let r = Math.max(
+            0,
+            Math.min(255, (perc * r1 + (1 - perc) * r0) | 0)
+        ).toString(16);
+        let g = Math.max(
+            0,
+            Math.min(255, (perc * g1 + (1 - perc) * g0) | 0)
+        ).toString(16);
+        let b = Math.max(
+            0,
+            Math.min(255, (perc * b1 + (1 - perc) * b0) | 0)
+        ).toString(16);
+        if (r.length < 2) r = "0" + r;
+        if (g.length < 2) g = "0" + g;
+        if (b.length < 2) b = "0" + b;
+        const corFundo = "#" + r + g + b;
+        const corTexto = textColorForBackground(corFundo);
+        return `background-color: ${corFundo}; color: ${corTexto};`;
+    }
+
+    function gerarHeatmap(consolidado) {
+        const periodos = [
+            "Entrada 07:30–09:10",
+            "Saída 07:30–09:10",
+            "Entrada 09:30–11:10",
+            "Saída 09:30–11:10",
+            "Entrada 11:20–13:00",
+            "Saída 11:20–13:00",
+        ];
+
+        let html = [
+            `<table class="table table-bordered table-sm w-50 mx-auto" style="height: auto; line-height: 1.2;"><thead><tr><th>Data</th>`,
+        ];
+
+        for (let i = 0; i < periodos.length; i++) {
+            html.push(`<th>${periodos[i]}</th>`);
+        }
+
+        html.push(`
+            </tr>
+            </thead>
+            <tbody>
+        `);
+
+        let menor = consolidado[0].total_entrada1;
+        let maior = consolidado[0].total_entrada1;
+
+        for (let i = 0; i < consolidado.length; i++) {
+            const dado = consolidado[i];
+            if (menor > dado.total_entrada1) menor = dado.total_entrada1;
+            if (maior < dado.total_entrada1) maior = dado.total_entrada1;
+            if (menor > dado.total_saida1) menor = dado.total_saida1;
+            if (maior < dado.total_saida1) maior = dado.total_saida1;
+            if (menor > dado.total_entrada2) menor = dado.total_entrada2;
+            if (maior < dado.total_entrada2) maior = dado.total_entrada2;
+            if (menor > dado.total_saida2) menor = dado.total_saida2;
+            if (maior < dado.total_saida2) maior = dado.total_saida2;
+            if (menor > dado.total_entrada3) menor = dado.total_entrada3;
+            if (maior < dado.total_entrada3) maior = dado.total_entrada3;
+            if (menor > dado.total_saida3) menor = dado.total_saida3;
+            if (maior < dado.total_saida3) maior = dado.total_saida3;
+        }
+
+        let delta = maior - menor || 1;
+
+        for (let i = 0; i < consolidado.length; i++) {
+            const dado = consolidado[i];
+            html.push(`<tr><td>${dado.dia}</td>`);
+
+            let n = (dado.total_entrada1 - menor) / delta;
+            html.push(`<td style="${coresHeatmap(n)}">${dado.total_entrada1}</td>`);
+            n = (dado.total_saida1 - menor) / delta;
+            html.push(`<td style="${coresHeatmap(n)}">${dado.total_saida1}</td>`);
+
+            n = (dado.total_entrada2 - menor) / delta;
+            html.push(`<td style="${coresHeatmap(n)}">${dado.total_entrada2}</td>`);
+            n = (dado.total_saida2 - menor) / delta;
+            html.push(`<td style="${coresHeatmap(n)}">${dado.total_saida2}</td>`);
+
+            n = (dado.total_entrada3 - menor) / delta;
+            html.push(`<td style="${coresHeatmap(n)}">${dado.total_entrada3}</td>`);
+            n = (dado.total_saida3 - menor) / delta;
+            html.push(`<td style="${coresHeatmap(n)}">${dado.total_saida3}</td>`);
+
+            html.push(`</tr>`);
+        }
+
+        html.push(`</tbody></table>`);
+        document.getElementById("div-heatmap").innerHTML = html.join("");
+    }
+
+    document.getElementById('btnFiltrar').addEventListener('click', async () => {
         const dataInicial = document.getElementById('dataInicial').value;
         const dataFinal = document.getElementById('dataFinal').value;
         const tipo = 'temperatura';
@@ -308,11 +459,10 @@
         }
         document.getElementById('tituloTermometro').innerText = tipo === 'temperatura' ? 'Temperatura Atual' : 'Umidade Atual';
         document.getElementById('tituloGrafico').innerText = tipo === 'temperatura' ? 'Variação de temperatura' : 'Variação de umidade';
-        criarGrafico(tipo, dataInicial, dataFinal);
-        atualizarKPIs(dataInicial, dataFinal, tipo);
+        await atualizarKPIs(dataInicial, dataFinal, tipo);
     });
 
-    window.addEventListener('DOMContentLoaded', () => {
+    window.addEventListener('DOMContentLoaded', async () => {
         const hoje = new Date();
         const seteDiasAtras = new Date();
         seteDiasAtras.setDate(hoje.getDate() - 7);
@@ -320,8 +470,7 @@
         const dataFinal = formatarData(hoje);
         document.getElementById('dataInicial').value = dataInicial;
         document.getElementById('dataFinal').value = dataFinal;
-        criarGrafico('temperatura', dataInicial, dataFinal);
-        atualizarKPIs(dataInicial, dataFinal, 'temperatura');
+        await atualizarKPIs(dataInicial, dataFinal, 'temperatura');
     });
 </script>
 
