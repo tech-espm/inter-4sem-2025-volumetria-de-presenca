@@ -44,15 +44,12 @@
 
   #header {
     background-color: var(--accent-color-2);
-    background-image: url("static/img/areaVermelha.png");
-    background-position: left;
+    background-image: url("static/img/mlknoPC.png");
+    background-position: cover;
     background-repeat: no-repeat;
     color: var(--primary-color);
-    padding: 20px;
-    text-align: left;
     margin-bottom: 10px;
-    padding-bottom: 20px;
-    padding-top: 0px;
+    padding-top: 250px;
   }
 
   #header h1 {
@@ -60,28 +57,57 @@
     line-height: 1.2;
     font-weight: 700;
     margin-top: 0px;
+    text-align: left;
   }
 
-  #header2 {
-    h1 {
+  #header2 h1 {
       color: var(--text-color);
       font-size: 2.5rem;
       line-height: 1.2;
       font-weight: 700;
       margin-top: 0px;
       text-align: right;
-    }
+    
   }
 
   #header3 {
-    h1 {
+    background-color: var(--accent-color-2);
+    color: var(--primary-color);
+    margin-bottom: 10px;
+    padding-top: 50px;
+  }
+
+  #header3 p {
+    font-size: 2.5rem;
+    font-weight: 700;
+    text-align: center;
+    color: var(--primary-color);
+  }
+
+  #header4 h1 {
+
       color: var(--text-color);
       font-size: 2.5rem;
       line-height: 1.2;
       font-weight: 700;
       margin-top: 0px;
       text-align: right;
-    }
+    
+  }
+
+  .btn-primary {
+    background-color: var(--accent-color-2);
+    border-color: var(--accent-color-2);
+    color: var(--primary-color);
+    filter: drop-shadow(0 0 5px var(--primary-color));
+    font-size: 2rem;
+  }
+
+  .btn-primary:hover {
+    background-color: var(--accent-color-3);
+    border-color: var(--accent-color-3);
+    color: var(--primary-color);
+    filter: drop-shadow(0 0 10px var(--accent-color-2));
   }
 </style>
 
@@ -104,20 +130,31 @@
     </h1>
   </div>
 
-  <div class="card shadow my-4">
-    <div class="card-body" id="div-grafico"></div>
+  <div class="container-fluid px-4" id="header3">
+    <p class="display-4 my-4">
+      .valor1  .valor2  .valor3
+    </p>
   </div>
 
-  <div class="row" id="header3">
+  <div id="canvasZone"><canvas id="renderCanvas"></canvas></div>
+
+  <div class="row" id="header4">
     <h1 class="text-right mb-4">
       ANÁLISES EM TEMPO REAL <br />
       E COM UM DIGITAL TWIN
     </h1>
   </div>
 
-  <div id="canvasZone"><canvas id="renderCanvas"></canvas></div>
-
-</div>
+  <div class="row align-items-center my-4">
+    <div class="col-auto">
+      <span style="font-size: 1.3rem; font-weight: 500;">Para a análise em tempo real <br> clique aqui</span>
+    </div>
+    <div class="col-auto">
+      <a href="{{ url_for('dashboard') }}">
+      <button type="button" class="btn btn-primary">ANÁLISE</button>
+      </a>
+    </div>
+  </div>
 
 <script type="text/javascript">
   "use strict";

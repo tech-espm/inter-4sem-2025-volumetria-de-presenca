@@ -4,8 +4,8 @@
 <link rel="shortcut icon" href="{{ url_for('static', filename='img/favicon.ico') }}" type="image/x-icon">
 <style>
     body {
-        background-color: #0B113A;
-        color: #FFFFFF;
+        background-color: var(--primary-color);
+        color: #ffefe6;
         font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
@@ -13,20 +13,20 @@
         background-color: #121A4D;
         border-radius: 12px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        color: #FFFFFF;
+        color: #ffefe6;
         padding: 1rem;
     }
 
     .card-title {
         font-weight: 600;
         font-size: 1.2rem;
-        color: #FFFFFF;
+        color: #ffefe6;
     }
 
     .kpi {
         font-size: 1.8rem;
         font-weight: bold;
-        color: #FFFFFF;
+        color: #ffefe6;
     }
 
     .form-select,
@@ -36,17 +36,22 @@
     }
 
     .btn-primary {
-        background-color: #1877F2;
-        border-color: #1877F2;
+        background-color: var(--accent-color-2);
+        border-color: var(--accent-color-2);
+        color: var(--primary-color);
+        font-weight: 600;
     }
 
     .btn-primary:hover {
-        background-color: #1E90FF;
+        background-color: var(--accent-color-3);
+        border-color: var(--accent-color-3);
+        color: var(--primary-color);
+        filter: drop-shadow(0 0 10px var(--accent-color-3));
     }
 
     .swal2-popup {
         background: #121A4D !important;
-        color: #FFFFFF !important;
+        color: #ffefe6 !important;
     }
 
     .termometro {
@@ -167,8 +172,11 @@
 
     <!-- Gráfico + Termômetro -->
     <div class="row g-3">
+
         <div class="col-md-4 col-12">
+
             <div class="card text-center">
+
                 <h5 class="card-title" id="tituloTermometro">Temperatura Atual</h5>
                 <div class="d-flex justify-content-center align-items-center flex-wrap">
                     <!-- Termômetro -->
@@ -184,14 +192,18 @@
                         <div id="valorTermometro" class="kpi">--</div>
                     </div>
                 </div>
+
             </div>
+
         </div>
+
         <div class="col-md-8 col-12">
             <div class="card">
                 <h5 class="card-title" id="tituloGrafico">Variação de temperatura</h5>
                 <canvas id="graficoSensor" height="300"></canvas>
             </div>
         </div>
+
     </div>
 
     <div class="card shadow my-4">
@@ -203,6 +215,7 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+
     let chartSensor;
 
     const configCores = {
@@ -472,6 +485,7 @@
         document.getElementById('dataFinal').value = dataFinal;
         await atualizarKPIs(dataInicial, dataFinal, 'temperatura');
     });
+
 </script>
 
 {% endblock %}
