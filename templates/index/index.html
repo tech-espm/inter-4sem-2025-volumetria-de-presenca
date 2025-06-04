@@ -44,18 +44,31 @@
 
   #header {
     background-color: var(--accent-color-2);
-    background-image: url("static/img/mlknoPC.png");
-    background-position: cover;
+    background-image: url(static/img/sala.webp);
+    background-size: cover;
     background-repeat: no-repeat;
+    background-position: center;
     color: var(--primary-color);
     margin-bottom: 10px;
+  }
+
+  #typing-text {
+    white-space: pre-line;
+    min-height: 144px;
+    display: inline-block;
+    line-height: 48px;
+  }
+
+  #header .protecao {
+    background-image: url(static/img/moire.png);
+    background-repeat: repeat;
     padding-top: 250px;
+    color: #fff;
   }
 
   #header h1 {
     font-size: 2.5rem;
     line-height: 1.2;
-    font-weight: 700;
     margin-top: 0px;
     text-align: left;
   }
@@ -64,7 +77,6 @@
       color: var(--text-color);
       font-size: 2.5rem;
       line-height: 1.2;
-      font-weight: 700;
       margin-top: 0px;
       text-align: right;
     
@@ -79,7 +91,6 @@
 
   #header3 p {
     font-size: 2.5rem;
-    font-weight: 700;
     text-align: center;
     color: var(--primary-color);
   }
@@ -89,7 +100,6 @@
       color: var(--text-color);
       font-size: 2.5rem;
       line-height: 1.2;
-      font-weight: 700;
       margin-top: 0px;
       text-align: right;
     
@@ -114,15 +124,15 @@
 {% endblock %} {% block body %}
 
 <div class="container-fluid">
-  <div class="container-fluid px-4" id="header">
-    <h1 class="display-4 my-4">
-      CONTROLE DE PRESENÇA <br />
-      E FLUXO DE AULAS <br />
-      COMO NUNCA ANTES VISTO
-    </h1>
+  <div class="container-fluid" id="header">
+    <div class="protecao px-4 mx-n3 pb-4">
+      <h1 class="display-4" id="header1">
+        <span id="typing-text"></span>
+      </h1>
+    </div>
   </div>
 
-  <div class="row" id="header2">
+  <div id="header2" class="my-5">
     <h1 class="text-right mb-4">
       MONITORAMENTO FÁCIL, <br />
       RÁPIDO E <br />
@@ -158,6 +168,28 @@
 
 <script type="text/javascript">
   "use strict";
+
+  // Typing effect for header1
+  const text = "CONTROLE DE PRESENÇA\nE FLUXO DE AULAS\nCOMO NUNCA ANTES VISTO";
+  const typingText = document.getElementById("typing-text");
+  let charIndex = 0;
+
+  function typeText() {
+    if (charIndex < text.length) {
+      typingText.innerHTML += text.charAt(charIndex);
+      charIndex++;
+      setTimeout(typeText, 50);
+    } else {
+      setTimeout(function () {
+        typingText.innerHTML = "";
+        charIndex = 0;
+        typeText();
+      }, 2500);
+    }
+  }
+
+  // Start typing effect when page loads
+  window.addEventListener('load', typeText);
 
   let canvas = document.getElementById("renderCanvas");
   let engine = null;
