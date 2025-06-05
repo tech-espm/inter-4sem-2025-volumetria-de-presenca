@@ -1,9 +1,11 @@
-
 {% extends 'layout.html' %} {% block head %}
 <link rel="shortcut icon" href="static/img/favicon.ico" type="image/x-icon" />
+<link
+  href="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.css"
+  rel="stylesheet"
+/>
 
 <style>
-
   #hero-section .h1 {
     color: var(--accent-color-2);
   }
@@ -15,16 +17,148 @@
     margin-bottom: 1.5rem;
   }
 
+  h2.section-title {
+    color: var(--primary-color);
+    font-weight: 700;
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .card-team {
+    background-color: rgba(255, 255, 255, 0.3);
+    backdrop-filter: blur(30px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    transition: all 0.3s ease-in-out;
+    border-radius: 12px;
+    padding: 20px;
+    height: 100%; /* Garante que o cartão preencha o flip card */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .card-team:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
+  }
+
+  .team-img {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    border: 3px solid rgb(255, 234, 221);
+  }
+
+  .flip-card {
+    background: none;
+    width: 100%;
+    height: 250px;
+    perspective: 1000px;
+  }
+
+  .flip-card-inner {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    transition: transform 0.6s ease-in-out;
+    transform-style: preserve-3d;
+  }
+
+  .flip-card:hover .flip-card-inner,
+  .flip-card:focus-within .flip-card-inner {
+    transform: rotateY(180deg);
+  }
+
+  .flip-card-front,
+  .flip-card-back {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden;
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .flip-card-back {
+    background: rgba(255, 255, 255, 0.3);
+    color: #222;
+    transform: rotateY(180deg);
+    z-index: 3;
+    border-radius: 12px;
+    padding: 20px;
+  }
+
+  .timeline {
+    position: relative;
+    margin: 40px auto 60px auto;
+    padding-left: 20px;
+    max-width: 700px;
+  }
+  .timeline:before {
+    content: "";
+    position: absolute;
+    left: 30px;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--accent-color-2, var(--accent-color-2));
+    border-radius: 2px;
+    z-index: 0;
+  }
+  .timeline-item {
+    position: relative;
+    margin-bottom: 40px;
+    display: flex;
+    align-items: flex-start;
+    min-height: 60px;
+  }
+  .timeline-dot {
+    position: absolute;
+    left: 22px;
+    top: 8px;
+    width: 20px;
+    height: 20px;
+    background: rgba(0, 11, 65, 0.671);
+    border: 4px solid var(--accent-color-2, #ff7f50);
+    border-radius: 50%;
+    z-index: 2;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  }
+  .timeline-content {
+    margin-left: 60px;
+    background: var(--secondary-color);
+    border-radius: 10px;
+    padding: 18px 24px;
+    box-shadow: 0 2px 8px rgba(0, 11, 65, 0.671);
+    min-width: 220px;
+    max-width: 500px;
+  }
+  .timeline-content h4 {
+    margin-top: 0;
+    margin-bottom: 8px;
+    color: var(--accent-color-2);
+    font-weight: 700;
+    font-size: 1.3rem;
+  }
+  .timeline-content p {
+    margin-bottom: 0;
+    color: var(--text-color);
+    font-size: 1rem;
+  }
 </style>
 
 {% endblock %} {% block body %}
 
 <div class="container-fluid px-4 pg-about">
-
   <!-- Hero Section -->
 
   <div class="hero mb-5" id="hero-section">
-
     <img
       src="static/img/AbsTECH2.png"
       alt="Logo Absolut"
@@ -35,15 +169,12 @@
     <p class="lead">
       Tecnologia de sensores para ambientes acadêmicos mais inteligentes
     </p>
-
   </div>
 
   <!-- Sobre o Projeto -->
 
-  <div class="row align-items-center mb-5 px-3 px-md-5">
-
+  <div class="row align-items-center mb-5 px-3 px-md-5" data-aos="fade-up">
     <div class="col-md-7">
-
       <h3 class="section-title text-md-start text-center mb-3">
         SOBRE O PROJETO
         <div
@@ -67,7 +198,6 @@
         ambiente. Utilizamos sensores avançados para mapear volumes físicos e
         detectar variações de densidade em tempo real.
       </p>
-
     </div>
     <div class="col-md-5 text-center">
       <img
@@ -77,13 +207,11 @@
         class="img-fluid"
       />
     </div>
-
   </div>
 
   <!-- Quem Somos -->
 
-  <section class="mb-5 d-flex justify-content-center">
-
+  <section class="mb-5 d-flex justify-content-center" data-aos="fade-left">
     <div
       class="bg-light-custom px-4 py-4 rounded-4 shadow-sm text-center"
       style="
@@ -100,161 +228,373 @@
         para ambientes educacionais mais inteligentes.
       </p>
     </div>
-    
   </section>
 
-  <!-- Nossa Equipe -->
+  <!-- Nossa Missão -->
 
+  <div class="timeline my-5">
+    <div class="timeline-item" data-aos="fade-right">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h4>Início do Projeto</h4>
+        <p>Identificamos a dor da má gestão de espaços educacionais.</p>
+      </div>
+    </div>
+
+    <div class="timeline-item" data-aos="fade-left">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h4>Parceria com a Absolut</h4>
+        <p>Unimos forças com especialistas em sensores inteligentes.</p>
+      </div>
+    </div>
+
+    <div class="timeline-item" data-aos="fade-right">
+      <div class="timeline-dot"></div>
+      <div class="timeline-content">
+        <h4>Desenvolvimento da Solução</h4>
+        <p>
+          Implementamos sensores para monitorar a presença em salas de aula.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Nossa Equipe -->
   <div
     class="container-fluid px-4"
     style="
-      background-image: url('static/img/background_equipe2.gif');
-      background-size: 100%;
+      background-image: url('static/img/background_equipe.gif');
+      background-size: cover;
       background-position: center;
       border-radius: 12px;
       padding: 20px;
     "
   >
-    <!-- <div class="container-fluid" style="background-image: url('static/img/background_equipe2.gif'); background-size: cover; background-position: center; padding: 40px 0px; margin-bottom: 0;">-->
-
-    <h3 class="section-title" id="team">NOSSA EQUIPE</h3>
+    <h2 class="section-title" id="team">NOSSA EQUIPE</h2>
     <div class="row justify-content-center mb-5">
+      <!-- Card 1 -->
       <div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
-        <div class="card card-team text-center">
-          <img
-            src="static/img/perfil/fernando.jpg"
-            alt="Fernando Sabella"
-            class="team-img mx-auto"
-          />
-          <p class="nomes fw-semibold mt-2">Fernando Pires</p>
-          <div class="row align-items-center justify-content-center gap-3 fs-4">
-            <a
-              href="https://www.linkedin.com/in/fernando-sabella-00742b30b/"
-              target="_blank"
-              class="text-dark me-3"
+        <div class="flip-card" tabindex="0">
+          <div class="flip-card-inner">
+            <!-- Front -->
+            <div class="flip-card-front card card-team text-center">
+              <img
+                src="static/img/perfil/fernando.jpg"
+                alt="Fernando Sabella"
+                class="team-img mx-auto"
+              />
+              <p class="nomes fw-semibold mt-2">Fernando Pires</p>
+              <div
+                class="row align-items-center justify-content-center gap-3 fs-4 mt-3"
+              >
+                <a
+                  href="https://www.linkedin.com/in/fernando-sabella-00742b30b/"
+                  target="_blank"
+                  class="text-dark me-3"
+                >
+                  <i class="bx bxl-linkedin-square icones"></i>
+                </a>
+                <a
+                  href="https://github.com/caicara29"
+                  target="_blank"
+                  class="text-dark"
+                >
+                  <i class="bx bxl-github icones"></i>
+                </a>
+              </div>
+            </div>
+            <!-- Back -->
+            <div
+              class="flip-card-back card card-team text-center d-flex flex-column justify-content-center align-items-center"
             >
-              <i class="bx bxl-linkedin-square icones"></i>
-            </a>
-            <a
-              href="https://github.com/caicara29"
-              target="_blank"
-              class="text-dark"
-            >
-              <i class="bx bxl-github icones"></i>
-            </a>
+              <img
+                src="static/img/perfil/fernando.jpg"
+                alt="Fernando Sabella"
+                class="team-img mx-auto"
+              />
+              <span class="mb-1 small mt-2">Gerente de Projeto</span>
+              <div
+                class="row align-items-center justify-content-center gap-3 fs-4 mt-3"
+              >
+                <a
+                  href="https://www.linkedin.com/in/fernando-sabella-00742b30b/"
+                  target="_blank"
+                  class="text-dark me-3"
+                >
+                  <i class="bx bxl-linkedin-square icones"></i>
+                </a>
+                <a
+                  href="https://github.com/caicara29"
+                  target="_blank"
+                  class="text-dark"
+                >
+                  <i class="bx bxl-github icones"></i>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
+      <!-- Card 2 -->
       <div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
-        <div class="card card-team text-center">
-          <img
-            src="static/img/perfil/gabriel.jpeg"
-            alt="Gabriel Prestes"
-            class="team-img mx-auto"
-          />
-          <p class="nomes fw-semibold mt-2">Gabriel Prestes</p>
-          <div class="row align-items-center justify-content-center gap-3 fs-4">
-            <a
-              href="https://www.linkedin.com/in/gabriel-prestes-moraes-cardoso-53b473250/"
-              target="_blank"
-              class="text-dark me-3"
+        <div class="flip-card" tabindex="0">
+          <div class="flip-card-inner">
+            <!-- Front -->
+            <div class="flip-card-front card card-team text-center">
+              <img
+                src="static/img/perfil/gabriel.jpeg"
+                alt="Gabriel Prestes"
+                class="team-img mx-auto"
+              />
+              <p class="nomes fw-semibold mt-2">Gabriel Prestes</p>
+              <div
+                class="row align-items-center justify-content-center gap-3 fs-4 mt-3"
+              >
+                <a
+                  href="https://www.linkedin.com/in/gabriel-prestes-moraes-cardoso-53b473250/"
+                  target="_blank"
+                  class="text-dark me-3"
+                >
+                  <i class="bx bxl-linkedin-square icones"></i>
+                </a>
+                <a
+                  href="https://github.com/gabrielpmcardoso"
+                  target="_blank"
+                  class="text-dark"
+                >
+                  <i class="bx bxl-github icones"></i>
+                </a>
+              </div>
+            </div>
+            <!-- Back -->
+            <div
+              class="flip-card-back card card-team text-center d-flex flex-column justify-content-center align-items-center"
             >
-              <i class="bx bxl-linkedin-square icones"></i>
-            </a>
-            <a
-              href="https://github.com/gabrielpmcardoso"
-              target="_blank"
-              class="text-dark"
-            >
-              <i class="bx bxl-github icones"></i>
-            </a>
+              <img
+                src="static/img/perfil/gabriel.jpeg"
+                alt="Gabriel Prestes"
+                class="team-img mx-auto"
+              />
+              <span class="mb-1 small mt-2">Engenheiro de I.A.</span>
+              <div
+                class="row align-items-center justify-content-center gap-3 fs-4 mt-3"
+              >
+                <a
+                  href="https://www.linkedin.com/in/gabriel-prestes-moraes-cardoso-53b473250/"
+                  target="_blank"
+                  class="text-dark me-3"
+                >
+                  <i class="bx bxl-linkedin-square icones"></i>
+                </a>
+                <a
+                  href="https://github.com/gabrielpmcardoso"
+                  target="_blank"
+                  class="text-dark"
+                >
+                  <i class="bx bxl-github icones"></i>
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-
-      <div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
-        <div class="card card-team text-center">
-          <img
-            src="static/img/perfil/henrique.jpeg"
-            alt="Henrique Lecce"
-            class="team-img mx-auto"
-          />
-          <p class="nomes fw-semibold mt-2">Henrique Lecce</p>
-          <div class="row align-items-center justify-content-center gap-3 fs-4">
-            <a
-              href="https://www.linkedin.com/in/henriquelecce/"
-              target="_blank"
-              class="text-dark me-3"
+    </div>
+    <!-- Card 3 -->
+    <div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
+      <div class="flip-card" tabindex="0">
+        <div class="flip-card-inner">
+          <!-- Front -->
+          <div class="flip-card-front card card-team text-center">
+            <img
+              src="static/img/perfil/henrique.jpeg"
+              alt="Henrique Lecce"
+              class="team-img mx-auto"
+            />
+            <p class="nomes fw-semibold mt-2">Henrique Lecce</p>
+            <div
+              class="row align-items-center justify-content-center gap-3 fs-4 mt-3"
             >
-              <i class="bx bxl-linkedin-square icones"></i>
-            </a>
-            <a
-              href="https://github.com/hqlcc"
-              target="_blank"
-              class="text-dark"
+              <a
+                href="https://www.linkedin.com/in/henriquelecce/"
+                target="_blank"
+                class="text-dark me-3"
+              >
+                <i class="bx bxl-linkedin-square icones"></i>
+              </a>
+              <a
+                href="https://github.com/hqlcc"
+                target="_blank"
+                class="text-dark"
+              >
+                <i class="bx bxl-github icones"></i>
+              </a>
+            </div>
+          </div>
+          <!-- Back -->
+          <div
+            class="flip-card-back card card-team text-center d-flex flex-column justify-content-center align-items-center"
+          >
+            <img
+              src="static/img/perfil/henrique.jpeg"
+              alt="Henrique Lecce"
+              class="team-img mx-auto"
+            />
+            <span class="mb-1 small mt-2">Desenvolvedor Frontend</span>
+            <div
+              class="row align-items-center justify-content-center gap-3 fs-4 mt-3"
             >
-              <i class="bx bxl-github icones"></i>
-            </a>
+              <a
+                href="https://www.linkedin.com/in/henriquelecce/"
+                target="_blank"
+                class="text-dark me-3"
+              >
+                <i class="bx bxl-linkedin-square icones"></i>
+              </a>
+              <a
+                href="https://github.com/hqlcc"
+                target="_blank"
+                class="text-dark"
+              >
+                <i class="bx bxl-github icones"></i>
+              </a>
+            </div>
           </div>
         </div>
       </div>
-
-      <div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
-        <div class="card card-team text-center">
-          <img
-            src="static/img/perfil/isabelle.jpeg"
-            alt="Isabelle Dib"
-            class="team-img mx-auto"
-          />
-          <p class="nomes fw-semibold mt-2">Isabelle Dib</p>
-          <div class="row align-items-center justify-content-center gap-3 fs-4">
-            <a
-              href="https://www.linkedin.com/in/isabelle-dib/"
-              target="_blank"
-              class="text-dark me-3"
+    </div>
+    <!-- Card 4 -->
+    <div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
+      <div class="flip-card" tabindex="0">
+        <div class="flip-card-inner">
+          <!-- Front -->
+          <div class="flip-card-front card card-team text-center">
+            <img
+              src="static/img/perfil/isabelle.jpeg"
+              alt="Isabelle Dib"
+              class="team-img mx-auto"
+            />
+            <p class="nomes fw-semibold mt-2">Isabelle Dib</p>
+            <div
+              class="row align-items-center justify-content-center gap-3 fs-4 mt-3"
             >
-              <i class="bx bxl-linkedin-square icones"></i>
-            </a>
-            <a
-              href="https://github.com/isa-dib"
-              target="_blank"
-              class="text-dark"
+              <a
+                href="https://www.linkedin.com/in/isabelle-dib/"
+                target="_blank"
+                class="text-dark me-3"
+              >
+                <i class="bx bxl-linkedin-square icones"></i>
+              </a>
+              <a
+                href="https://github.com/isa-dib"
+                target="_blank"
+                class="text-dark"
+              >
+                <i class="bx bxl-github icones"></i>
+              </a>
+            </div>
+          </div>
+          <!-- Back -->
+          <div
+            class="flip-card-back card card-team text-center d-flex flex-column justify-content-center align-items-center"
+          >
+            <img
+              src="static/img/perfil/isabelle.jpeg"
+              alt="Isabelle Dib"
+              class="team-img mx-auto"
+            />
+            <span class="mb-1 small mt-2">Analista de Dados</span>
+            <div
+              class="row align-items-center justify-content-center gap-3 fs-4 mt-3"
             >
-              <i class="bx bxl-github icones"></i>
-            </a>
+              <a
+                href="https://www.linkedin.com/in/isabelle-dib/"
+                target="_blank"
+                class="text-dark me-3"
+              >
+                <i class="bx bxl-linkedin-square icones"></i>
+              </a>
+              <a
+                href="https://github.com/isa-dib"
+                target="_blank"
+                class="text-dark"
+              >
+                <i class="bx bxl-github icones"></i>
+              </a>
+            </div>
           </div>
         </div>
       </div>
-
-      <div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
-        <div class="card card-team text-center">
-          <img
-            src="static/img/perfil/joao.jpeg"
-            alt="João Pedro Helbel"
-            class="team-img mx-auto"
-          />
-          <p class="nomes fw-semibold mt-2">João Helbel</p>
-          <div class="row align-items-center justify-content-center gap-3 fs-4">
-            <a
-              href="https://www.linkedin.com/in/joaohelbel/"
-              target="_blank"
-              class="text-dark me-3"
+    </div>
+    <!-- Card 5 -->
+    <div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
+      <div class="flip-card" tabindex="0">
+        <div class="flip-card-inner">
+          <!-- Front -->
+          <div class="flip-card-front card card-team text-center">
+            <img
+              src="static/img/perfil/joao.jpeg"
+              alt="João Pedro Helbel"
+              class="team-img mx-auto"
+            />
+            <p class="nomes fw-semibold mt-2">João Helbel</p>
+            <div
+              class="row align-items-center justify-content-center gap-3 fs-4 mt-3"
             >
-              <i class="bx bxl-linkedin-square icones"></i>
-            </a>
-            <a
-              href="https://github.com/joaohelbel"
-              target="_blank"
-              class="text-dark"
+              <a
+                href="https://www.linkedin.com/in/joaohelbel/"
+                target="_blank"
+                class="text-dark me-3"
+              >
+                <i class="bx bxl-linkedin-square icones"></i>
+              </a>
+              <a
+                href="https://github.com/joaohelbel"
+                target="_blank"
+                class="text-dark"
+              >
+                <i class="bx bxl-github icones"></i>
+              </a>
+            </div>
+          </div>
+          <!-- Back -->
+          <div
+            class="flip-card-back card card-team text-center d-flex flex-column justify-content-center align-items-center"
+          >
+            <img
+              src="static/img/perfil/joao.jpeg"
+              alt="João Pedro Helbel"
+              class="team-img mx-auto"
+            />
+            <span class="mb-1 small mt-2">Desenvolvedor Fullstack</span>
+            <div
+              class="row align-items-center justify-content-center gap-3 fs-4 mt-3"
             >
-              <i class="bx bxl-github icones"></i>
-            </a>
+              <a
+                href="https://www.linkedin.com/in/joaohelbel/"
+                target="_blank"
+                class="text-dark me-3"
+              >
+                <i class="bx bxl-linkedin-square icones"></i>
+              </a>
+              <a
+                href="https://github.com/joaohelbel"
+                target="_blank"
+                class="text-dark"
+              >
+                <i class="bx bxl-github icones"></i>
+              </a>
+            </div>
           </div>
         </div>
       </div>
     </div>
   </div>
 </div>
+
+<script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
+<script>
+  AOS.init();
+</script>
 
 {% endblock %}

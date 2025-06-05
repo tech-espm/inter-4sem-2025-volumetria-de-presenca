@@ -74,12 +74,11 @@
   }
 
   #header2 h1 {
-      color: var(--text-color);
-      font-size: 2.5rem;
-      line-height: 1.2;
-      margin-top: 0px;
-      text-align: right;
-    
+    color: var(--text-color);
+    font-size: 2.5rem;
+    line-height: 1.2;
+    margin-top: 0px;
+    text-align: right;
   }
 
   #header3 {
@@ -96,13 +95,11 @@
   }
 
   #header4 h1 {
-
-      color: var(--text-color);
-      font-size: 2.5rem;
-      line-height: 1.2;
-      margin-top: 0px;
-      text-align: right;
-    
+    color: var(--text-color);
+    font-size: 2.5rem;
+    line-height: 1.2;
+    margin-top: 0px;
+    text-align: right;
   }
 
   .btn-primary {
@@ -141,14 +138,12 @@
   </div>
 
   <div class="container-fluid px-4" id="header3">
-    <p class="display-4 my-4">
-      .valor1  .valor2  .valor3
-    </p>
+    <p class="display-4 my-4">.valor1 .valor2 .valor3</p>
   </div>
 
   <div id="canvasZone"><canvas id="renderCanvas"></canvas></div>
 
-  <div class="row" id="header4">
+  <div class="my-5" id="header4">
     <h1 class="text-right mb-4">
       ANÁLISES EM TEMPO REAL <br />
       E COM UM DIGITAL TWIN
@@ -157,135 +152,140 @@
 
   <div class="row align-items-center my-4">
     <div class="col-auto">
-      <span style="font-size: 1.3rem; font-weight: 500;">Para a análise em tempo real <br> clique aqui</span>
+      <span style="font-size: 1.3rem; font-weight: 500; text-align: right"
+        >Para a análise em tempo real <br />
+        clique aqui</span
+      >
     </div>
     <div class="col-auto">
       <a href="{{ url_for('dashboard') }}">
-      <button type="button" class="btn btn-primary">ANÁLISE</button>
+        <button type="button" class="btn btn-primary">ANÁLISE</button>
       </a>
     </div>
   </div>
 
-<script type="text/javascript">
-  "use strict";
+  <script type="text/javascript">
+    "use strict";
 
-  // Typing effect for header1
-  const text = "CONTROLE DE PRESENÇA\nE FLUXO DE AULAS\nCOMO NUNCA ANTES VISTO";
-  const typingText = document.getElementById("typing-text");
-  let charIndex = 0;
+    // Typing effect for header1
+    const text =
+      "CONTROLE DE PRESENÇA\nE FLUXO DE AULAS\nCOMO NUNCA ANTES VISTO";
+    const typingText = document.getElementById("typing-text");
+    let charIndex = 0;
 
-  function typeText() {
-    if (charIndex < text.length) {
-      typingText.innerHTML += text.charAt(charIndex);
-      charIndex++;
-      setTimeout(typeText, 50);
-    } else {
-      setTimeout(function () {
-        typingText.innerHTML = "";
-        charIndex = 0;
-        typeText();
-      }, 2500);
-    }
-  }
-
-  // Start typing effect when page loads
-  window.addEventListener('load', typeText);
-
-  let canvas = document.getElementById("renderCanvas");
-  let engine = null;
-  let scene = null;
-  let objeto1 = null;
-  let objeto2 = null;
-
-  async function createScene() {
-    // https://doc.babylonjs.com/toolsAndResources/inspector
-    // https://doc.babylonjs.com/features/featuresDeepDive/importers/glTF
-    // https://doc.babylonjs.com/features/featuresDeepDive/mesh/transforms/center_origin/position
-    // https://playground.babylonjs.com/#WGZLGJ#11018
-
-    scene = new BABYLON.Scene(engine);
-    // Create a default skybox with an environment.
-    const hdrTexture = BABYLON.CubeTexture.CreateFromPrefilteredData(
-      "/static/glb/environment.dds",
-      scene
-    );
-    const currentSkybox = scene.createDefaultSkybox(hdrTexture, true);
-
-    let idsAdicionados = new Set();
-
-    await BABYLON.AppendSceneAsync("/static/glb/projetoInterSala.glb", scene);
-
-    await BABYLON.AppendSceneAsync("/static/glb/plantinha_3d.glb", scene);
-    let nodes = scene.getNodes();
-    for (let i = nodes.length - 1; i >= 0; i--) {
-      const node = nodes[i];
-      if (node.id == "__root__" && !idsAdicionados.has(node.uniqueId)) {
-        objeto1 = node;
-        idsAdicionados.add(node.uniqueId);
-        break;
+    function typeText() {
+      if (charIndex < text.length) {
+        typingText.innerHTML += text.charAt(charIndex);
+        charIndex++;
+        setTimeout(typeText, 50);
+      } else {
+        setTimeout(function () {
+          typingText.innerHTML = "";
+          charIndex = 0;
+          typeText();
+        }, 2500);
       }
     }
 
-    await BABYLON.AppendSceneAsync("/static/glb/plantinha_3d.glb", scene);
-    nodes = scene.getNodes();
-    for (let i = nodes.length - 1; i >= 0; i--) {
-      const node = nodes[i];
-      if (node.id == "__root__" && !idsAdicionados.has(node.uniqueId)) {
-        objeto2 = node;
-        objeto2.translate(
-          new BABYLON.Vector3(1, 0, 0),
-          1,
-          BABYLON.Space.GLOBAL
-        );
-        objeto2.setEnabled(false);
-        idsAdicionados.add(node.uniqueId);
-        break;
+    // Start typing effect when page loads
+    window.addEventListener("load", typeText);
+
+    let canvas = document.getElementById("renderCanvas");
+    let engine = null;
+    let scene = null;
+    let objeto1 = null;
+    let objeto2 = null;
+
+    async function createScene() {
+      // https://doc.babylonjs.com/toolsAndResources/inspector
+      // https://doc.babylonjs.com/features/featuresDeepDive/importers/glTF
+      // https://doc.babylonjs.com/features/featuresDeepDive/mesh/transforms/center_origin/position
+      // https://playground.babylonjs.com/#WGZLGJ#11018
+
+      scene = new BABYLON.Scene(engine);
+      // Create a default skybox with an environment.
+      const hdrTexture = BABYLON.CubeTexture.CreateFromPrefilteredData(
+        "/static/glb/environment.dds",
+        scene
+      );
+      const currentSkybox = scene.createDefaultSkybox(hdrTexture, true);
+
+      let idsAdicionados = new Set();
+
+      await BABYLON.AppendSceneAsync("/static/glb/projetoInterSala.glb", scene);
+
+      await BABYLON.AppendSceneAsync("/static/glb/plantinha_3d.glb", scene);
+      let nodes = scene.getNodes();
+      for (let i = nodes.length - 1; i >= 0; i--) {
+        const node = nodes[i];
+        if (node.id == "__root__" && !idsAdicionados.has(node.uniqueId)) {
+          objeto1 = node;
+          idsAdicionados.add(node.uniqueId);
+          break;
+        }
       }
+
+      await BABYLON.AppendSceneAsync("/static/glb/plantinha_3d.glb", scene);
+      nodes = scene.getNodes();
+      for (let i = nodes.length - 1; i >= 0; i--) {
+        const node = nodes[i];
+        if (node.id == "__root__" && !idsAdicionados.has(node.uniqueId)) {
+          objeto2 = node;
+          objeto2.translate(
+            new BABYLON.Vector3(1, 0, 0),
+            1,
+            BABYLON.Space.GLOBAL
+          );
+          objeto2.setEnabled(false);
+          idsAdicionados.add(node.uniqueId);
+          break;
+        }
+      }
+
+      scene.createDefaultCameraOrLight(true, true, true);
+      const camera = scene.activeCamera;
+      //camera.alpha = 3.8014; // Math.PI / 2;
+      //camera.beta = 1.2256;
+      camera.alpha = 3.6949941371093122;
+      camera.beta = 1.4214854652301074;
+      camera.radius = 100;
     }
 
-    scene.createDefaultCameraOrLight(true, true, true);
-    const camera = scene.activeCamera;
-    //camera.alpha = 3.8014; // Math.PI / 2;
-    //camera.beta = 1.2256;
-    camera.alpha = 3.6949941371093122;
-    camera.beta = 1.4214854652301074;
-    camera.radius = 100;
-  }
+    async function init() {
+      try {
+        engine = new BABYLON.Engine(canvas, true, {
+          preserveDrawingBuffer: false,
+          stencil: false,
+          disableWebGL2Support: false,
+        });
+        await createScene();
+      } catch (ex) {
+        alert("Erro ao criar a engine: " + ex.message || ex.toString());
+      }
 
-  async function init() {
-    try {
-      engine = new BABYLON.Engine(canvas, true, {
-        preserveDrawingBuffer: false,
-        stencil: false,
-        disableWebGL2Support: false,
+      window.addEventListener("resize", function () {
+        engine.resize();
       });
-      await createScene();
-    } catch (ex) {
-      alert("Erro ao criar a engine: " + ex.message || ex.toString());
+
+      //scene.debugLayer.show();
+
+      let contador = 0;
+      engine.runRenderLoop(function () {
+        contador++;
+        if (contador >= 30) {
+          contador = 0;
+          objeto1.setEnabled(!objeto1.isEnabled());
+          objeto2.setEnabled(!objeto2.isEnabled());
+        }
+
+        if (scene && scene.activeCamera) {
+          scene.render();
+        }
+      });
     }
 
-    window.addEventListener("resize", function () {
-      engine.resize();
-    });
+    init();
+  </script>
 
-    //scene.debugLayer.show();
-
-    let contador = 0;
-    engine.runRenderLoop(function () {
-      contador++;
-      if (contador >= 30) {
-        contador = 0;
-        objeto1.setEnabled(!objeto1.isEnabled());
-        objeto2.setEnabled(!objeto2.isEnabled());
-      }
-
-      if (scene && scene.activeCamera) {
-        scene.render();
-      }
-    });
-  }
-
-  init();
-</script>
-
-{% endblock %}
+  {% endblock %}
+</div>
