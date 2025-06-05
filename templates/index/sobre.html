@@ -57,6 +57,7 @@
     width: 100%;
     height: 250px;
     perspective: 1000px;
+    cursor: pointer;
   }
 
   .flip-card-inner {
@@ -65,10 +66,11 @@
     height: 100%;
     transition: transform 0.6s ease-in-out;
     transform-style: preserve-3d;
+    pointer-events: none;
   }
 
-  .flip-card:hover .flip-card-inner,
-  .flip-card:focus-within .flip-card-inner {
+  .flip-card:hover .flip-card-inner /*,
+  .flip-card:focus-within .flip-card-inner*/ {
     transform: rotateY(180deg);
   }
 
@@ -211,7 +213,7 @@
 
   <!-- Quem Somos -->
 
-  <section class="mb-5 d-flex justify-content-center" data-aos="fade-left">
+  <section class="mb-5 d-flex justify-content-center" data-aos="fade-down">
     <div
       class="bg-light-custom px-4 py-4 rounded-4 shadow-sm text-center"
       style="
@@ -233,7 +235,7 @@
   <!-- Nossa Missão -->
 
   <div class="timeline my-5">
-    <div class="timeline-item" data-aos="fade-right">
+    <div class="timeline-item" data-aos="fade-up">
       <div class="timeline-dot"></div>
       <div class="timeline-content">
         <h4>Início do Projeto</h4>
@@ -241,7 +243,7 @@
       </div>
     </div>
 
-    <div class="timeline-item" data-aos="fade-left">
+    <div class="timeline-item" data-aos="fade-down">
       <div class="timeline-dot"></div>
       <div class="timeline-content">
         <h4>Parceria com a Absolut</h4>
@@ -249,7 +251,7 @@
       </div>
     </div>
 
-    <div class="timeline-item" data-aos="fade-right">
+    <div class="timeline-item" data-aos="fade-up">
       <div class="timeline-dot"></div>
       <div class="timeline-content">
         <h4>Desenvolvimento da Solução</h4>
@@ -399,191 +401,195 @@
           </div>
         </div>
       </div>
+    <!--
     </div>
-    <!-- Card 3 -->
-    <div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
-      <div class="flip-card" tabindex="0">
-        <div class="flip-card-inner">
-          <!-- Front -->
-          <div class="flip-card-front card card-team text-center">
-            <img
-              src="static/img/perfil/henrique.jpeg"
-              alt="Henrique Lecce"
-              class="team-img mx-auto"
-            />
-            <p class="nomes fw-semibold mt-2">Henrique Lecce</p>
-            <div
-              class="row align-items-center justify-content-center gap-3 fs-4 mt-3"
-            >
-              <a
-                href="https://www.linkedin.com/in/henriquelecce/"
-                target="_blank"
-                class="text-dark me-3"
+    <div class="row justify-content-center mb-5">
+    -->
+      <!-- Card 3 -->
+      <div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
+        <div class="flip-card" tabindex="0">
+          <div class="flip-card-inner">
+            <!-- Front -->
+            <div class="flip-card-front card card-team text-center">
+              <img
+                src="static/img/perfil/henrique.jpeg"
+                alt="Henrique Lecce"
+                class="team-img mx-auto"
+              />
+              <p class="nomes fw-semibold mt-2">Henrique Lecce</p>
+              <div
+                class="row align-items-center justify-content-center gap-3 fs-4 mt-3"
               >
-                <i class="bx bxl-linkedin-square icones"></i>
-              </a>
-              <a
-                href="https://github.com/hqlcc"
-                target="_blank"
-                class="text-dark"
-              >
-                <i class="bx bxl-github icones"></i>
-              </a>
+                <a
+                  href="https://www.linkedin.com/in/henriquelecce/"
+                  target="_blank"
+                  class="text-dark me-3"
+                >
+                  <i class="bx bxl-linkedin-square icones"></i>
+                </a>
+                <a
+                  href="https://github.com/hqlcc"
+                  target="_blank"
+                  class="text-dark"
+                >
+                  <i class="bx bxl-github icones"></i>
+                </a>
+              </div>
             </div>
-          </div>
-          <!-- Back -->
-          <div
-            class="flip-card-back card card-team text-center d-flex flex-column justify-content-center align-items-center"
-          >
-            <img
-              src="static/img/perfil/henrique.jpeg"
-              alt="Henrique Lecce"
-              class="team-img mx-auto"
-            />
-            <span class="mb-1 small mt-2">Desenvolvedor Frontend</span>
+            <!-- Back -->
             <div
-              class="row align-items-center justify-content-center gap-3 fs-4 mt-3"
+              class="flip-card-back card card-team text-center d-flex flex-column justify-content-center align-items-center"
             >
-              <a
-                href="https://www.linkedin.com/in/henriquelecce/"
-                target="_blank"
-                class="text-dark me-3"
+              <img
+                src="static/img/perfil/henrique.jpeg"
+                alt="Henrique Lecce"
+                class="team-img mx-auto"
+              />
+              <span class="mb-1 small mt-2">Desenvolvedor Frontend</span>
+              <div
+                class="row align-items-center justify-content-center gap-3 fs-4 mt-3"
               >
-                <i class="bx bxl-linkedin-square icones"></i>
-              </a>
-              <a
-                href="https://github.com/hqlcc"
-                target="_blank"
-                class="text-dark"
-              >
-                <i class="bx bxl-github icones"></i>
-              </a>
+                <a
+                  href="https://www.linkedin.com/in/henriquelecce/"
+                  target="_blank"
+                  class="text-dark me-3"
+                >
+                  <i class="bx bxl-linkedin-square icones"></i>
+                </a>
+                <a
+                  href="https://github.com/hqlcc"
+                  target="_blank"
+                  class="text-dark"
+                >
+                  <i class="bx bxl-github icones"></i>
+                </a>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <!-- Card 4 -->
-    <div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
-      <div class="flip-card" tabindex="0">
-        <div class="flip-card-inner">
-          <!-- Front -->
-          <div class="flip-card-front card card-team text-center">
-            <img
-              src="static/img/perfil/isabelle.jpeg"
-              alt="Isabelle Dib"
-              class="team-img mx-auto"
-            />
-            <p class="nomes fw-semibold mt-2">Isabelle Dib</p>
-            <div
-              class="row align-items-center justify-content-center gap-3 fs-4 mt-3"
-            >
-              <a
-                href="https://www.linkedin.com/in/isabelle-dib/"
-                target="_blank"
-                class="text-dark me-3"
+      <!-- Card 4 -->
+      <div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
+        <div class="flip-card" tabindex="0">
+          <div class="flip-card-inner">
+            <!-- Front -->
+            <div class="flip-card-front card card-team text-center">
+              <img
+                src="static/img/perfil/isabelle.jpeg"
+                alt="Isabelle Dib"
+                class="team-img mx-auto"
+              />
+              <p class="nomes fw-semibold mt-2">Isabelle Dib</p>
+              <div
+                class="row align-items-center justify-content-center gap-3 fs-4 mt-3"
               >
-                <i class="bx bxl-linkedin-square icones"></i>
-              </a>
-              <a
-                href="https://github.com/isa-dib"
-                target="_blank"
-                class="text-dark"
-              >
-                <i class="bx bxl-github icones"></i>
-              </a>
+                <a
+                  href="https://www.linkedin.com/in/isabelle-dib/"
+                  target="_blank"
+                  class="text-dark me-3"
+                >
+                  <i class="bx bxl-linkedin-square icones"></i>
+                </a>
+                <a
+                  href="https://github.com/isa-dib"
+                  target="_blank"
+                  class="text-dark"
+                >
+                  <i class="bx bxl-github icones"></i>
+                </a>
+              </div>
             </div>
-          </div>
-          <!-- Back -->
-          <div
-            class="flip-card-back card card-team text-center d-flex flex-column justify-content-center align-items-center"
-          >
-            <img
-              src="static/img/perfil/isabelle.jpeg"
-              alt="Isabelle Dib"
-              class="team-img mx-auto"
-            />
-            <span class="mb-1 small mt-2">Analista de Dados</span>
+            <!-- Back -->
             <div
-              class="row align-items-center justify-content-center gap-3 fs-4 mt-3"
+              class="flip-card-back card card-team text-center d-flex flex-column justify-content-center align-items-center"
             >
-              <a
-                href="https://www.linkedin.com/in/isabelle-dib/"
-                target="_blank"
-                class="text-dark me-3"
+              <img
+                src="static/img/perfil/isabelle.jpeg"
+                alt="Isabelle Dib"
+                class="team-img mx-auto"
+              />
+              <span class="mb-1 small mt-2">Analista de Dados</span>
+              <div
+                class="row align-items-center justify-content-center gap-3 fs-4 mt-3"
               >
-                <i class="bx bxl-linkedin-square icones"></i>
-              </a>
-              <a
-                href="https://github.com/isa-dib"
-                target="_blank"
-                class="text-dark"
-              >
-                <i class="bx bxl-github icones"></i>
-              </a>
+                <a
+                  href="https://www.linkedin.com/in/isabelle-dib/"
+                  target="_blank"
+                  class="text-dark me-3"
+                >
+                  <i class="bx bxl-linkedin-square icones"></i>
+                </a>
+                <a
+                  href="https://github.com/isa-dib"
+                  target="_blank"
+                  class="text-dark"
+                >
+                  <i class="bx bxl-github icones"></i>
+                </a>
+              </div>
             </div>
           </div>
         </div>
       </div>
-    </div>
-    <!-- Card 5 -->
-    <div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
-      <div class="flip-card" tabindex="0">
-        <div class="flip-card-inner">
-          <!-- Front -->
-          <div class="flip-card-front card card-team text-center">
-            <img
-              src="static/img/perfil/joao.jpeg"
-              alt="João Pedro Helbel"
-              class="team-img mx-auto"
-            />
-            <p class="nomes fw-semibold mt-2">João Helbel</p>
-            <div
-              class="row align-items-center justify-content-center gap-3 fs-4 mt-3"
-            >
-              <a
-                href="https://www.linkedin.com/in/joaohelbel/"
-                target="_blank"
-                class="text-dark me-3"
+      <!-- Card 5 -->
+      <div class="col-6 col-md-2 mb-4 d-flex justify-content-center">
+        <div class="flip-card" tabindex="0">
+          <div class="flip-card-inner">
+            <!-- Front -->
+            <div class="flip-card-front card card-team text-center">
+              <img
+                src="static/img/perfil/joao.jpeg"
+                alt="João Pedro Helbel"
+                class="team-img mx-auto"
+              />
+              <p class="nomes fw-semibold mt-2">João Helbel</p>
+              <div
+                class="row align-items-center justify-content-center gap-3 fs-4 mt-3"
               >
-                <i class="bx bxl-linkedin-square icones"></i>
-              </a>
-              <a
-                href="https://github.com/joaohelbel"
-                target="_blank"
-                class="text-dark"
-              >
-                <i class="bx bxl-github icones"></i>
-              </a>
+                <a
+                  href="https://www.linkedin.com/in/joaohelbel/"
+                  target="_blank"
+                  class="text-dark me-3"
+                >
+                  <i class="bx bxl-linkedin-square icones"></i>
+                </a>
+                <a
+                  href="https://github.com/joaohelbel"
+                  target="_blank"
+                  class="text-dark"
+                >
+                  <i class="bx bxl-github icones"></i>
+                </a>
+              </div>
             </div>
-          </div>
-          <!-- Back -->
-          <div
-            class="flip-card-back card card-team text-center d-flex flex-column justify-content-center align-items-center"
-          >
-            <img
-              src="static/img/perfil/joao.jpeg"
-              alt="João Pedro Helbel"
-              class="team-img mx-auto"
-            />
-            <span class="mb-1 small mt-2">Desenvolvedor Fullstack</span>
+            <!-- Back -->
             <div
-              class="row align-items-center justify-content-center gap-3 fs-4 mt-3"
+              class="flip-card-back card card-team text-center d-flex flex-column justify-content-center align-items-center"
             >
-              <a
-                href="https://www.linkedin.com/in/joaohelbel/"
-                target="_blank"
-                class="text-dark me-3"
+              <img
+                src="static/img/perfil/joao.jpeg"
+                alt="João Pedro Helbel"
+                class="team-img mx-auto"
+              />
+              <span class="mb-1 small mt-2">Desenvolvedor Fullstack</span>
+              <div
+                class="row align-items-center justify-content-center gap-3 fs-4 mt-3"
               >
-                <i class="bx bxl-linkedin-square icones"></i>
-              </a>
-              <a
-                href="https://github.com/joaohelbel"
-                target="_blank"
-                class="text-dark"
-              >
-                <i class="bx bxl-github icones"></i>
-              </a>
+                <a
+                  href="https://www.linkedin.com/in/joaohelbel/"
+                  target="_blank"
+                  class="text-dark me-3"
+                >
+                  <i class="bx bxl-linkedin-square icones"></i>
+                </a>
+                <a
+                  href="https://github.com/joaohelbel"
+                  target="_blank"
+                  class="text-dark"
+                >
+                  <i class="bx bxl-github icones"></i>
+                </a>
+              </div>
             </div>
           </div>
         </div>
@@ -595,6 +601,9 @@
 <script src="https://cdn.jsdelivr.net/npm/aos@2.3.4/dist/aos.js"></script>
 <script>
   AOS.init();
+  $(".flip-card").click(function () {
+    $(this).find("a")[0].click();
+  });
 </script>
 
 {% endblock %}
