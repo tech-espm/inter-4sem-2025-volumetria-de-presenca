@@ -2,7 +2,7 @@ from flask import Flask, jsonify, render_template, json, request, Response
 import config
 import requests
 from datetime import datetime, timedelta
-from banco import engine, listarConsolidado
+import banco
 from sqlalchemy import create_engine, text
 from sqlalchemy.orm import Session
 
@@ -30,7 +30,7 @@ def dados_temp():
     if not data_inicial or not data_final:
         return jsonify([])
 
-    with Session(engine) as sessao, sessao.begin():
+    with Session(banco.engine) as sessao, sessao.begin():
         result = sessao.execute(text("""
             SELECT 
                 DATE_FORMAT(data, '%H:00:00') AS hora,
@@ -55,12 +55,30 @@ def dados_temp():
 
 
 
+@app.route("/obterDadosTempoReal")
+def obterDadosTempoReal():
+    with Session(banco.engine) as sessao, sessao.begin():
+        # PRESENCA
+        result = sessao.execute(text("SELECT max(id) FROM presenca"))
+        max_id_pres = result.fetchone()[0] or 0
+
+        response_pres = requests.get(f"{config.url_api}?sensor=presence&id_inferior={max_id_pres}")
+        dados_pres = response_pres.json()
+
+        for dado in dados_pres:
+            sessao.execute(text("""
+                INSERT INTO presenca (id, data, id_sensor, delta, bateria, ocupado)
+                VALUES (:id, :data, :id_sensor, :delta, :bateria, :ocupado)
+            """), dado)
+
+    return jsonify(banco.obterDadosTempoReal())
+
 @app.route("/obterDados")
 def obterDados():
     data_inicial = request.args['data_inicial']
     data_final = request.args['data_final']
 
-    with Session(engine) as sessao, sessao.begin():
+    with Session(banco.engine) as sessao, sessao.begin():
         # TEMPERATURA
         result = sessao.execute(text("SELECT max(id) FROM temperatura"))
         max_id_temp = result.fetchone()[0] or 0
@@ -101,7 +119,7 @@ def obterDados():
             """), dado)
     
     return jsonify({
-        "consolidado": listarConsolidado(data_inicial, data_final)
+        "consolidado": banco.listarConsolidado(data_inicial, data_final)
 	})
     
 @app.get('/dados/temperatura/kpi')
@@ -109,7 +127,7 @@ def dados_temp_kpi():
     data_inicial = request.args.get('data_inicial')
     data_final = request.args.get('data_final')
 
-    with Session(engine) as sessao, sessao.begin():
+    with Session(banco.engine) as sessao, sessao.begin():
         result = sessao.execute(text("""
             SELECT MIN(temperatura), MAX(temperatura), AVG(temperatura)
             FROM temperatura

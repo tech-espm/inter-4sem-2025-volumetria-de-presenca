@@ -142,6 +142,16 @@
   </div>
 
   <div id="canvasZone"><canvas id="renderCanvas"></canvas></div>
+  <div class="text-center my-2">
+    <div class="mb-2">
+      <b>Última atualização:</b>
+      <span id="ultimaAtualizacao">-</span>
+    </div>
+    <label for="cbAleatorio">
+      <input type="checkbox" id="cbAleatorio" onchange="aleatorio = this.checked;" />
+      Simular dados aleatórios
+    </label>
+  </div>
 
   <div class="my-5" id="header4">
     <h1 class="text-right mb-4">
@@ -193,8 +203,8 @@
     let canvas = document.getElementById("renderCanvas");
     let engine = null;
     let scene = null;
-    let objeto1 = null;
-    let objeto2 = null;
+    let objetos = [];
+    let aleatorio = false;
 
     async function createScene() {
       // https://doc.babylonjs.com/toolsAndResources/inspector
@@ -214,6 +224,20 @@
 
       await BABYLON.AppendSceneAsync("/static/glb/projetoInterSala.glb", scene);
 
+      for (let i = 1; i <= 8; i++) {
+        await BABYLON.AppendSceneAsync(`/static/glb/projetoInterPessoa${i}.glb`, scene);
+        let nodes = scene.getNodes();
+        for (let i = nodes.length - 1; i >= 0; i--) {
+          const node = nodes[i];
+          if (node.id == "__root__" && !idsAdicionados.has(node.uniqueId)) {
+            objetos.push(node);
+            idsAdicionados.add(node.uniqueId);
+            break;
+          }
+        }
+      }
+
+      /* 
       await BABYLON.AppendSceneAsync("/static/glb/plantinha_3d.glb", scene);
       let nodes = scene.getNodes();
       for (let i = nodes.length - 1; i >= 0; i--) {
@@ -241,6 +265,7 @@
           break;
         }
       }
+      */
 
       scene.createDefaultCameraOrLight(true, true, true);
       const camera = scene.activeCamera;
@@ -251,6 +276,25 @@
       camera.radius = 100;
     }
 
+    async function atualizarDados() {
+      try {
+        const resposta = await fetch("/obterDadosTempoReal");
+        const dados = await resposta.json();
+        if (!aleatorio && dados && dados.length === 8) {
+          for (let i = 0; i < 8; i++) {
+            objetos[i].setEnabled(dados[i].ocupado);
+          }
+        }
+
+        const ultimaAtualizacao = document.getElementById("ultimaAtualizacao");
+        ultimaAtualizacao.textContent = new Date().toLocaleString();
+      } catch (ex) {
+        // Apenas ignora...
+      }
+
+      setTimeout(atualizarDados, 1000);
+    }
+
     async function init() {
       try {
         engine = new BABYLON.Engine(canvas, true, {
@@ -259,6 +303,11 @@
           disableWebGL2Support: false,
         });
         await createScene();
+
+        for (let i = 0; i < objetos.length; i++)
+          objetos[i].setEnabled(false);
+
+        atualizarDados();
       } catch (ex) {
         alert("Erro ao criar a engine: " + ex.message || ex.toString());
       }
@@ -271,11 +320,16 @@
 
       let contador = 0;
       engine.runRenderLoop(function () {
-        contador++;
-        if (contador >= 30) {
-          contador = 0;
-          objeto1.setEnabled(!objeto1.isEnabled());
-          objeto2.setEnabled(!objeto2.isEnabled());
+        if (aleatorio) {
+          contador++;
+          if (contador >= 90) {
+            contador = 0;
+            for (let i = 0; i < objetos.length; i++) {
+              if (Math.random() < 0.5) {
+                objetos[i].setEnabled(!objetos[i].isEnabled());
+              }
+            }
+          }
         }
 
         if (scene && scene.activeCamera) {

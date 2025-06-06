@@ -79,6 +79,38 @@ def criarPessoa(nome, email):
 		# lista = [ ... ]
 		# sessao.execute(text("INSERT INTO pessoa (nome, email) VALUES (:nome, :email)"), lista)
 
+def obterDadosTempoReal():
+	with Session(engine) as sessao:
+		registros = sessao.execute(text("""
+(select id_sensor, ocupado, time_to_sec(timediff(now(), data)) delta_agora from presenca where id_sensor = 1 order by id desc limit 1)
+union all
+(select id_sensor, ocupado, time_to_sec(timediff(now(), data)) delta_agora from presenca where id_sensor = 2 order by id desc limit 1)
+union all
+(select id_sensor, ocupado, time_to_sec(timediff(now(), data)) delta_agora from presenca where id_sensor = 3 order by id desc limit 1)
+union all
+(select id_sensor, ocupado, time_to_sec(timediff(now(), data)) delta_agora from presenca where id_sensor = 4 order by id desc limit 1)
+union all
+(select id_sensor, ocupado, time_to_sec(timediff(now(), data)) delta_agora from presenca where id_sensor = 5 order by id desc limit 1)
+union all
+(select id_sensor, ocupado, time_to_sec(timediff(now(), data)) delta_agora from presenca where id_sensor = 6 order by id desc limit 1)
+union all
+(select id_sensor, ocupado, time_to_sec(timediff(now(), data)) delta_agora from presenca where id_sensor = 7 order by id desc limit 1)
+union all
+(select id_sensor, ocupado, time_to_sec(timediff(now(), data)) delta_agora from presenca where id_sensor = 8 order by id desc limit 1)
+;
+		"""))
+
+		lista = []
+
+		for (id_sensor, ocupado, delta_agora) in registros:
+			lista.append({
+				"id_sensor": id_sensor,
+				"ocupado": ocupado,
+				"delta_agora": delta_agora
+			})
+
+		return lista
+
 def listarConsolidado(data_inicial, data_final):
 	with Session(engine) as sessao:
 		parametros = {
