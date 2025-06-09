@@ -6,11 +6,10 @@
     body {
         background-color: var(--primary-color);
         color: #ffefe6;
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
 
     .card {
-        background-color: #121A4D;
+        background-color: var(--secondary-color);
         border-radius: 12px;
         box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
         color: #ffefe6;
@@ -47,6 +46,13 @@
         border-color: var(--accent-color-3);
         color: var(--primary-color);
         filter: drop-shadow(0 0 10px var(--accent-color-3));
+    }
+
+    .btn-primary:active {
+        background-color: var(--accent-color-4);
+        border-color: var(--accent-color-4);
+        color: var(--primary-color);
+        filter: drop-shadow(0 0 5px var(--accent-color-4));
     }
 
     .swal2-popup {
@@ -129,12 +135,13 @@
         }
     }
     tr:nth-child(even) {
-        background-color: #D6EEEE;
+        background-color: #fffdf9;
     }
     tr:nth-child(odd) {
-        background-color:rgb(23, 255, 255);
+        background-color: #f8faff;
     }
 </style>
+
 {% endblock %}
 
 {% block body %}
@@ -213,6 +220,7 @@
     </div>
 
     <div class="card shadow my-4">
+        <h5 class="card-title text-center">Heatmap de Ocupação</h5>
         <div class="card-body" id="div-heatmap"></div>
     </div>
 
@@ -371,12 +379,8 @@
     }
 
     function coresHeatmap(perc) {
-        const r0 = 0x00;
-        const g0 = 0x75;
-        const b0 = 0xf1;
-        const r1 = 0xff;
-        const g1 = 0x42;
-        const b1 = 0x00;
+        const r0 = 0x00, g0 = 0x75, b0 = 0xf1; 
+        const r1 = 0xff, g1 = 0x99, b1 = 0x00;
         let r = Math.max(
             0,
             Math.min(255, (perc * r1 + (1 - perc) * r0) | 0)

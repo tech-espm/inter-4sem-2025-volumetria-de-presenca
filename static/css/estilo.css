@@ -1,6 +1,6 @@
 :root {
-  --primary-color: rgb(0, 8, 48);
-  --secondary-color: rgb(0, 11, 65);
+  --primary-color: rgb(0, 5, 23);
+  --secondary-color: rgb(0, 21, 126);
   --tertiary-color: rgb(209, 226, 249);
   --quaternary-color: rgb(0, 56, 159);
   --accent-color: #ced4da;
@@ -136,4 +136,19 @@ p {
 
 .icones:hover {
   color: #ff2914;
+}
+
+::-webkit-scrollbar {
+  width: 12px;
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(135deg, var(--quaternary-color), var(--accent-color-3));
+  border-radius: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--primary-color);
+  border-radius: 8px;
 }
