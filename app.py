@@ -127,20 +127,35 @@ def dados_temp_kpi():
     data_inicial = request.args.get('data_inicial')
     data_final = request.args.get('data_final')
 
-    with Session(banco.engine) as sessao, sessao.begin():
-        result = sessao.execute(text("""
-            SELECT MIN(temperatura), MAX(temperatura), AVG(temperatura)
-            FROM temperatura
-            WHERE data BETWEEN :inicio AND :fim
-        """), {"inicio": data_inicial, "fim": data_final + " 23:59:59"})
+    if not data_inicial or not data_final:
+        return jsonify({"erro": "Datas inválidas"}), 400
 
-        min_temp, max_temp, avg_temp = result.fetchone()
+    try:
+        with Session(banco.engine) as sessao, sessao.begin():
+            result = sessao.execute(text("""
+                SELECT MIN(temperatura), MAX(temperatura), AVG(temperatura)
+                FROM temperatura
+                WHERE data BETWEEN :inicio AND :fim
+            """), {
+                "inicio": data_inicial,
+                "fim": data_final + " 23:59:59"
+            })
 
-    return jsonify({
-        "min": round(min_temp, 1),
-        "max": round(max_temp, 1),
-        "avg": round(avg_temp, 1)
-    })
+            row = result.fetchone()
+            if row is None or any(v is None for v in row):
+                return jsonify({"min": None, "max": None, "avg": None}), 200
+
+            min_temp, max_temp, avg_temp = row
+
+        return jsonify({
+            "min": round(min_temp, 1),
+            "max": round(max_temp, 1),
+            "avg": round(avg_temp, 1)
+        })
+
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 500
+
 
     
 @app.post('/criar')
