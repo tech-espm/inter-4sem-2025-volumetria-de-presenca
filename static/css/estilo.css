@@ -135,7 +135,7 @@ p {
 }
 
 .icones:hover {
-  color: #ff2914;
+  color: var(--secondary-color);
 }
 
 ::-webkit-scrollbar {
@@ -144,7 +144,7 @@ p {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: linear-gradient(135deg, var(--quaternary-color), var(--accent-color-3));
+  background: linear-gradient(135deg, var(--accent-color-3),  var(--quaternary-color));
   border-radius: 8px;
 }
 

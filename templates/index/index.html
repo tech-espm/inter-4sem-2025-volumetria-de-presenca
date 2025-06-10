@@ -126,6 +126,7 @@
     color: var(--primary-color);
     filter: drop-shadow(0 0 10px var(--accent-color-2));
   }
+
 </style>
 
 {% endblock %} {% block body %}
@@ -133,11 +134,13 @@
 <div class="container-fluid">
 
   <div class="container-fluid" id="header">
+
     <div class="protecao px-4 mx-n3 pb-4">
       <h1 class="display-4" id="header1">
         <span id="typing-text"></span>
       </h1>
     </div>
+
   </div>
 
   <div class="container-fluid px-4" id="header3" >
@@ -146,6 +149,7 @@
 
   <div id="canvasZone" data-aos="zoom-in" data-aos-duration="1500"><canvas id="renderCanvas"></canvas></div>
   <div class="text-center my-2">
+
     <div class="mb-2">
       <b>Última atualização:</b>
       <span id="ultimaAtualizacao">-</span>
@@ -154,19 +158,24 @@
       <input type="checkbox" id="cbAleatorio" onchange="aleatorio = this.checked;" />
       Simular dados aleatórios
     </label>
+
   </div>
 
   <div class="my-5" id="header4">
+
     <h1 class="text-right mb-4">
       <strong>ANÁLISES EM TEMPO REAL <br />
       COM UM DIGITAL TWIN </strong>
     </h1>
-    <div class="col-auto d-flex justify-content-end"></div>
+    <div class="col-auto d-flex justify-content-end">
       <a href="{{ url_for('dashboard') }}">
         <button type="button" class="btn btn-primary">DASHBOARD</button>
       </a>
     </div>
+    
   </div>
+
+</div>
 
 
 
@@ -345,4 +354,3 @@
   </script>
 
   {% endblock %}
-</div>
