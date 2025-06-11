@@ -156,6 +156,34 @@ def dados_temp_kpi():
     except Exception as e:
         return jsonify({"erro": str(e)}), 500
 
+@app.get("/dados/consolidado/dashboard")
+def dados_consolidado_dashboard():
+    data_inicial = request.args.get("data_inicial")
+    data_final = request.args.get("data_final")
+    
+    lista = banco.listarConsolidado(data_inicial, data_final)
+
+    total_entradas = 0
+    total_saidas = 0
+    dias = []
+    valores_diarios = []
+
+    for dado in lista:
+        entradas = dado['total_entrada1'] + dado['total_entrada2'] + dado['total_entrada3']
+        saidas = dado['total_saida1'] + dado['total_saida2'] + dado['total_saida3']
+        total_entradas += entradas
+        total_saidas += saidas
+        dias.append(dado['dia'])
+        valores_diarios.append(entradas + saidas)
+
+    return jsonify({
+        "total_entradas": total_entradas,
+        "total_saidas": total_saidas,
+        "movimento_diario": {
+            "labels": dias,
+            "valores": valores_diarios
+        }
+    })
 
     
 @app.post('/criar')

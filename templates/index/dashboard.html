@@ -134,9 +134,11 @@
             margin-bottom: 2rem;
         }
     }
+
     tr:nth-child(even) {
         background-color: #fffdf9;
     }
+
     tr:nth-child(odd) {
         background-color: #f8faff;
     }
@@ -188,7 +190,7 @@
 
         <div class="col-md-4 col-12">
 
-            <div class="card text-center">
+            <div class="card text-center" style="height: 100%;">
 
                 <h5 class="card-title" id="tituloTermometro">Temperatura Atual</h5>
                 <div class="d-flex justify-content-center align-items-center flex-wrap">
@@ -214,7 +216,7 @@
 
             <div class="card">
                 <h5 class="card-title" id="tituloGrafico">Variação de temperatura</h5>
-                <canvas id="graficoSensor" height="300"></canvas>
+                <canvas id="graficoSensor"></canvas>
             </div>
 
         </div>
@@ -222,6 +224,32 @@
     </div>
 
     <hr class="my-4" style="border-color: #00005c;">
+
+    <div class="row g-3 mb-4">
+        <div class="col-md-4 col-12">
+            <div class="card text-center">
+                <h5 class="card-title">Total de Entradas</h5>
+                <div id="kpiEntradas" class="kpi">--</div>
+            </div>
+        </div>
+        <div class="col-md-4 col-12">
+            <div class="card text-center">
+                <h5 class="card-title">Total de Saídas</h5>
+                <div id="kpiSaidas" class="kpi">--</div>
+            </div>
+        </div>
+        <div class="col-md-4 col-12">
+            <div class="card text-center">
+                <h5 class="card-title">Total de Movimentação</h5>
+                <div id="kpiTotalMovimentacao" class="kpi">--</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="card">
+        <h5 class="card-title text-center">Evolução Diária de Movimento</h5>
+        <canvas id="graficoMovimento"></canvas>
+    </div>
 
     <div class="card shadow my-4">
 
@@ -235,6 +263,53 @@
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
+
+    let chartMovimento;
+
+    async function atualizarDashboardPassagens(dataInicial, dataFinal) {
+        try {
+            const response = await fetch(`/dados/consolidado/dashboard?data_inicial=${dataInicial}&data_final=${dataFinal}`);
+            if (response.ok) {
+                const dados = await response.json();
+
+                document.getElementById('kpiEntradas').innerText = dados.total_entradas ?? '--';
+                document.getElementById('kpiSaidas').innerText = dados.total_saidas ?? '--';
+                document.getElementById('kpiTotalMovimentacao').innerText = (dados.total_entradas + dados.total_saidas) ?? '--';
+
+                // Atualizar gráfico de movimento
+                if (chartMovimento) {
+                    chartMovimento.destroy();
+                }
+
+                const ctx = document.getElementById('graficoMovimento').getContext('2d');
+                chartMovimento = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: dados.movimento_diario.labels,
+                        datasets: [{
+                            label: 'Movimentação Diária',
+                            data: dados.movimento_diario.valores,
+                            backgroundColor: 'rgba(255, 127, 80, 1)',
+                            borderColor: 'rgba(255, 127, 100, 1)',
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: { display: false }
+                        },
+                        scales: {
+                            y: { beginAtZero: true }
+                        }
+                    }
+                });
+            }
+        } catch (erro) {
+            console.error(erro);
+        }
+    }
+
 
     let chartSensor;
 
@@ -385,7 +460,7 @@
     }
 
     function coresHeatmap(perc) {
-        const r0 = 0x00, g0 = 0x75, b0 = 0xf1; 
+        const r0 = 0x00, g0 = 0x75, b0 = 0xf1;
         const r1 = 0xff, g1 = 0x99, b1 = 0x00;
         let r = Math.max(
             0,
@@ -489,6 +564,8 @@
         document.getElementById('tituloTermometro').innerText = tipo === 'temperatura' ? 'Temperatura Atual' : 'Umidade Atual';
         document.getElementById('tituloGrafico').innerText = tipo === 'temperatura' ? 'Variação de temperatura' : 'Variação de umidade';
         await atualizarKPIs(dataInicial, dataFinal, tipo);
+        await atualizarDashboardPassagens(dataInicial, dataFinal);
+
     });
 
     window.addEventListener('DOMContentLoaded', async () => {
@@ -500,6 +577,7 @@
         document.getElementById('dataInicial').value = dataInicial;
         document.getElementById('dataFinal').value = dataFinal;
         await atualizarKPIs(dataInicial, dataFinal, 'temperatura');
+        await atualizarDashboardPassagens(dataInicial, dataFinal);
     });
 
 </script>
