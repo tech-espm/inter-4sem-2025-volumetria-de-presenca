@@ -78,8 +78,13 @@
   }
 
   #header3 {
-    background-color: var(--accent-color-2);
-    color: var(--primary-color);
+    background-color: rgba(3, 0, 53, 0.8);
+    backdrop-filter: blur(10px);
+    border-color: rgb(3, 0, 53);
+    border-style: solid;
+    border-width: 3px;
+    color: var(--accent-color-2);
+    background-repeat: repeat;
     padding-top: 25px;
     padding-bottom: 25px;
     max-width: 800px;
@@ -92,7 +97,7 @@
   #header3 p {
     font-size: 2.5rem;
     text-align: center;
-    color: var(--primary-color);
+    color: var(--accente-color-2);
     font-weight: 500;
     margin-bottom: 10px;
   }
@@ -143,8 +148,14 @@
 
   </div>
 
-  <div class="container-fluid px-4" id="header3" >
-    <p class="display-4 my-4">.simples   .rápido   .automático</p>
+  <div class="container-fluid px-4" id="header3">
+    <p class="display-4 my-4">
+      <span>.Simples</span>
+      <span>&nbsp;&nbsp;</span>
+      <span>.Rápido</span>
+      <span>&nbsp;&nbsp;</span>
+      <span>.Automático</span>
+    </p>
   </div>
 
   <div id="canvasZone" data-aos="zoom-in" data-aos-duration="1500"><canvas id="renderCanvas"></canvas></div>
@@ -164,15 +175,15 @@
   <div class="my-5" id="header4">
 
     <h1 class="text-right mb-4">
-      <strong>ANÁLISES EM TEMPO REAL <br />
-      COM UM DIGITAL TWIN </strong>
+      <strong>DIGITAL TWIN <br />
+      COM ANÁLISES EM TEMPO REAL</strong>
     </h1>
     <div class="col-auto d-flex justify-content-end">
       <a href="{{ url_for('dashboard') }}">
         <button type="button" class="btn btn-primary">DASHBOARD</button>
       </a>
     </div>
-    
+
   </div>
 
 </div>

@@ -87,15 +87,6 @@
         background: #121A4D;
     }
 
-    .termometro::after {
-        width: 67.5px;
-        height: 67.5px;
-        background-color: #FF9900;
-        bottom: -48.5px;
-        border: 9px solid #0B113A;
-        left: 50%;
-        transform: translateX(-50%);
-    }
 
     .termometro .graduacoes {
         position: absolute;
@@ -240,7 +231,7 @@
         </div>
         <div class="col-md-4 col-12">
             <div class="card text-center">
-                <h5 class="card-title">Total de Movimentação</h5>
+                <h5 class="card-title">Total de Movimentações</h5>
                 <div id="kpiTotalMovimentacao" class="kpi">--</div>
             </div>
         </div>
@@ -253,7 +244,7 @@
 
     <div class="card shadow my-4">
 
-        <h5 class="card-title text-center">Heatmap de Ocupação</h5>
+        <h5 class="card-title text-center">Heatmap de Movimentação</h5>
         <div class="card-body" id="div-heatmap"></div>
 
     </div>
@@ -460,7 +451,7 @@
     }
 
     function coresHeatmap(perc) {
-        const r0 = 0x00, g0 = 0x75, b0 = 0xf1;
+        const r0 = 0xb3, g0 = 0xe0, b0 = 0xff;
         const r1 = 0xff, g1 = 0x99, b1 = 0x00;
         let r = Math.max(
             0,
